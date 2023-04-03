@@ -90,7 +90,7 @@ export default function InputQuestion() {
       ...conversation,
       {
         role: "user",
-        content: `Please generate only ${numberQue} on this topic : ${value}. and the correct answer. and 3 other wrong answers the output should be in json format like this. keep the questions and answers simple and short also please no number or \n in front of each object. and please use the same format as the example below. thank you. [{ "question": "What is the most popular web development language?", "correct_answer": "JavaScript", "incorrect_answers": [ "Python", "PHP", "C++" ] },]`,
+        content: `Please generate only ${numberQue} on this topic : ${value}. and the correct answer. and 3 other wrong answers plus the correct answer in it which the order has been extremely randomized, the output should be in json format like this. keep the questions and answers simple and short also please no number or \n in front of each object. and please use the same format as the example below. thank you. [{ "question": "What is the most popular web development language?", "correct_answer": "JavaScript", "options": [ "Python", "JavaScript", "PHP", "C++" ] },]`,
       },
     ];
     const response = await fetch("/api/openAIQuestion", {
@@ -114,8 +114,6 @@ export default function InputQuestion() {
     setConversation([]);
     setQuestionAns("");
   };
-
-  // console.log(questionAns);
 
   let questions: Question[] = [];
 

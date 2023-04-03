@@ -1,4 +1,4 @@
-import { QuestionIcon } from "@chakra-ui/icons";
+import { QuestionIcon } from '@chakra-ui/icons';
 import {
   Stack,
   InputGroup,
@@ -12,8 +12,9 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-} from "@chakra-ui/react";
-import React, { ChangeEvent, useCallback, useRef, useState } from "react";
+  Box,
+} from '@chakra-ui/react';
+import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
 
 interface Conversation {
   role: string;
@@ -23,14 +24,14 @@ interface Conversation {
 interface Question {
   question: string;
   correct_answer: string;
-  incorrect_answers: string[];
+  options: string[];
 }
 
 export default function InputQuestion() {
-  const [value, setValue] = useState<string>("");
-  const [numberQue, setNumberQue] = useState<string>("");
+  const [value, setValue] = useState<string>('');
+  const [numberQue, setNumberQue] = useState<string>('');
   const [conversation, setConversation] = useState<Conversation[]>([]);
-  const [questionAns, setQuestionAns] = useState<string>("");
+  const [questionAns, setQuestionAns] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -81,67 +82,67 @@ export default function InputQuestion() {
   //     }
   //   };
 
-  if (numberQue === "") {
-    setNumberQue("1 question");
+  if (numberQue === '') {
+    setNumberQue('1(one) question');
   }
 
   const handleSender = async () => {
     const chatHistory = [
       ...conversation,
+
       {
-        role: "user",
-        content: `Please generate only ${numberQue} on this topic : ${value}. and the correct answer. and 3 other wrong answers plus the correct answer in it which the order has been extremely randomized, the output should be in json format like this. keep the questions and answers simple and short also please no number or \n in front of each object. and please use the same format as the example below. thank you. [{ "question": "What is the most popular web development language?", "correct_answer": "JavaScript", "options": [ "Python", "JavaScript", "PHP", "C++" ] },]`,
+        role: 'user',
+        content: `Please generate ${numberQue} on the topic "${value}". The question should have a correct answer and three other wrong answers, with all options shuffled randomly. Please format the output as a JSON array with the following structure: [{ "question": "What is the capital of France?", "correct_answer": "Paris", "options": [ "Tokyo", "London", "Paris", "New York" ] }], make sure the correct answer and the correct answer in the options are the same.`,
       },
     ];
-    const response = await fetch("/api/openAIQuestion", {
-      method: "POST",
+    const response = await fetch('/api/openAIQuestion', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ messages: chatHistory }),
     });
-    setValue("");
+    setValue('');
     const data = await response.json();
     setConversation([
       ...chatHistory,
-      { role: "assistant", content: data.result.choices[0].message.content },
+      { role: 'assistant', content: data.result.choices[0].message.content },
     ]);
     setQuestionAns(data.result.choices[0].message.content);
   };
   const handlerRefresh = () => {
     inputRef.current?.focus();
-    setValue("");
+    setValue('');
     setConversation([]);
-    setQuestionAns("");
+    setQuestionAns('');
   };
 
   let questions: Question[] = [];
 
-  if (questionAns !== "") {
+  if (questionAns !== '') {
     questions = JSON.parse(questionAns);
   }
-  console.log(questions);
 
   return (
     <Center>
-      <Stack w="40%" spacing={4}>
+      <Stack w='40%' spacing={4}>
         <InputGroup>
           <InputLeftElement
-            pointerEvents="none"
-            children={<QuestionIcon color="gray.300" />}
+            pointerEvents='none'
+            children={<QuestionIcon color='red.300' />}
           />
           <Input
-            type="tel"
-            placeholder="Topic"
+            type='tel'
+            placeholder='Topic'
             value={value}
             onChange={handleInput}
             // onKeyDown={handleKeyDown}
           />
           <NumberInput
             onChange={(number) => {
-              number === "" || number === "1"
-                ? setNumberQue("1 question")
-                : setNumberQue(number + " questions");
+              number === '' || number === '1'
+                ? setNumberQue('1(one) question')
+                : setNumberQue(number + ' questions');
             }}
             defaultValue={1}
             min={1}
@@ -153,18 +154,18 @@ export default function InputQuestion() {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
-          <Button colorScheme="green" onClick={handleSender}>
-            Send
+          <Button colorScheme='blue' onClick={handlerRefresh}>
+            New
           </Button>
         </InputGroup>
-        <Button colorScheme="blue" onClick={handlerRefresh}>
-          Start New
+        <Button colorScheme='green' onClick={handleSender}>
+          Send
         </Button>
-        <div className="textarea">
+        <div className='textarea'>
           {conversation.map((item, index) => (
             <React.Fragment key={index}>
               <Spacer />
-              {item.role === "assistant" ? (
+              {item.role === 'assistant' ? (
                 <div>
                   <strong>Quizie</strong>
                   <br />
@@ -180,25 +181,29 @@ export default function InputQuestion() {
             </React.Fragment>
           ))}
         </div>
-        <p>{questionAns}</p>
-        {/* <Box>
-          {question.map((item, index) => (
+        {/* <p>{questionAns}</p> */}
+        <Box>
+          {questions.map((item, index) => (
             <React.Fragment key={index}>
               <Spacer />
-              {item.content !== "" ? (
+              {item.question !== '' ? (
                 <div>
                   <br />
-                  {item.content}
+                  {item.question}
                   {item.correct_answer}
-                  {item.incorrect_answers}
+                  {item.options?.map((option, index) => (
+                    <React.Fragment key={index}>
+                      <br />
+                      {option}
+                    </React.Fragment>
+                  ))}
                 </div>
               ) : (
-                <div>
-                </div>
+                <div></div>
               )}
             </React.Fragment>
           ))}
-        </Box> */}
+        </Box>
       </Stack>
     </Center>
   );

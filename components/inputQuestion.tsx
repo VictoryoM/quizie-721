@@ -14,17 +14,13 @@ import {
   NumberInputStepper,
   Box,
 } from '@chakra-ui/react';
+import { Question } from '@prisma/client';
+import axios from 'axios';
 import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
 
 interface Conversation {
   role: string;
   content: string;
-}
-
-interface Question {
-  question: string;
-  correct_answer: string;
-  options: string[];
 }
 
 export default function InputQuestion() {
@@ -38,61 +34,15 @@ export default function InputQuestion() {
     setValue(e.target.value);
   }, []);
 
-  //   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //     // const chatStarter = [
-  //     //   ...conversation,
-  //     //   {
-  //     //     role: "system",
-  //     //     content:
-  //     //       "You are a quiz generator and the topic is below, you will generate a multiple choices with answer",
-  //     //   },
-  //     // ];
-  //     // const response = await fetch("/api/openAIQuestion", {
-  //     //   method: "POST",
-  //     //   headers: {
-  //     //     "Content-Type": "application/json",
-  //     //   },
-  //     //   body: JSON.stringify({ messages: chatStarter }),
-  //     // });
-  //     if (e.key === "Enter") {
-  //       const chatHistory = [
-  //         ...conversation,
-  //         {
-  //           role: "user",
-  //           content:
-  //             "You are to generate 10 multiple choices with answer and the topic is " +
-  //             value +
-  //             ", you will generate it with this format {number: number, question: question, A: A, B: B, C: C, D: D, answer: answer}",
-  //         },
-  //       ];
-  //       const response = await fetch("/api/openAIQuestion", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ messages: chatHistory }),
-  //       });
-
-  //       const data = await response.json();
-  //       setValue("");
-  //       setConversation([
-  //         ...chatHistory,
-  //         { role: "user", content: data.result.choices[0].message.content },
-  //       ]);
-  //     }
-  //   };
-
   if (numberQue === '') {
     setNumberQue('1(one) question');
   }
 
   const handleSender = async () => {
-    const chatHistory = [
-      ...conversation,
-
+    const questionAsked = [
       {
         role: 'user',
-        content: `Please generate ${numberQue} on the topic "${value}". The question should have a correct answer and three other wrong answers, with all options shuffled randomly. Please format the output as a JSON array with the following structure: [{ "question": "What is the capital of France?", "correct_answer": "Paris", "options": [ "Tokyo", "London", "Paris", "New York" ] }], make sure the correct answer and the correct answer in the options are the same.`,
+        content: `Please generate ${numberQue} on the topic "${value}". The question should have a correct answer and three other wrong answers, with all options shuffled randomly. Please make sure the correct answer and the correct answer in the options are the same and format the output as a JSON array with the following structure: [{ "question": "What is the capital of France?", "correct_answer": "Paris", "options": [ "Tokyo", "London", "Paris", "New York" ] }].`,
       },
     ];
     const response = await fetch('/api/openAIQuestion', {
@@ -100,15 +50,22 @@ export default function InputQuestion() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ messages: chatHistory }),
+      body: JSON.stringify({ messages: questionAsked }),
     });
     setValue('');
-    const data = await response.json();
+    const arrays = await response.json();
     setConversation([
-      ...chatHistory,
-      { role: 'assistant', content: data.result.choices[0].message.content },
+      { role: 'Quizie', content: arrays.result.choices[0].message.content },
     ]);
-    setQuestionAns(data.result.choices[0].message.content);
+    setQuestionAns(arrays.result.choices[0].message.content);
+    const replies = arrays.result.choices[0].message.content;
+    let questions: Question[] = [];
+
+    if (replies !== '') {
+      questions = JSON.parse(replies);
+      const { data } = await axios.post(`/api/questionsPosts`, questions);
+      console.log(data);
+    }
   };
   const handlerRefresh = () => {
     inputRef.current?.focus();
@@ -119,8 +76,9 @@ export default function InputQuestion() {
 
   let questions: Question[] = [];
 
-  if (questionAns !== '') {
+  if (questionAns !== '' && questionAns !== questions.toString()) {
     questions = JSON.parse(questionAns);
+    // console.log(questions);
   }
 
   return (
@@ -158,14 +116,14 @@ export default function InputQuestion() {
             New
           </Button>
         </InputGroup>
-        <Button colorScheme='green' onClick={handleSender}>
+        <Button colorScheme='yellow' onClick={handleSender}>
           Send
         </Button>
         <div className='textarea'>
           {conversation.map((item, index) => (
             <React.Fragment key={index}>
               <Spacer />
-              {item.role === 'assistant' ? (
+              {item.role === 'Quizie' ? (
                 <div>
                   <strong>Quizie</strong>
                   <br />
@@ -181,7 +139,6 @@ export default function InputQuestion() {
             </React.Fragment>
           ))}
         </div>
-        {/* <p>{questionAns}</p> */}
         <Box>
           {questions.map((item, index) => (
             <React.Fragment key={index}>

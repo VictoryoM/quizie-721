@@ -1,48 +1,102 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
+// User table to store email, username, password, and user roles
 model User {
-  id        Int      @default(autoincrement()) @id
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  quizzes   Quiz[]
-  scores    Score[]
-}
-model Quiz {
-  id        Int      @id @default(autoincrement())
-  topic     String
-  createdAt DateTime @default(now())
-  questions Question[]
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  username     String        @unique
+  password     String
+  roles        Role[]        @relation("UserRole")
+  // One-to-many relationship with Topic table
+  topics       Topic[]       @relation("QuizMaster")
+  // One-to-many relationship with TopicResult table
+  topicResults TopicResult[]
+  Answer       Answer[]
+  Leaderboard  Leaderboard[]
 }
 
+// Role table to store user roles
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  users User[] @relation("UserRole")
+}
+
+// Topic table to store questions based on the topic and the level of difficulty
+model Topic {
+  id           Int           @id @default(autoincrement())
+  titleTopic   String
+  description  String?
+  level        String
+  // One-to-many relationship with Question table
+  questions    Question[]
+  // One-to-many relationship with TopicResult table
+  topicResults TopicResult[]
+  // One-to-many relationship with User table as QuizMaster
+  quizMaster   User?         @relation("QuizMaster", fields: [quizMasterId], references: [id])
+  quizMasterId Int?
+  // Track the popularity of the topic based on the number of times it has been done
+  timesTaken   Int           @default(0)
+  Leaderboard  Leaderboard[]
+}
+
+// Question table to store the actual question and answer choices
 model Question {
-  id        Int      @id @default(autoincrement())
-  text      String
-  answer    String
-  wrongAnswer String
-  createdAt DateTime @default(now())
-  quiz      Quiz     @relation(fields: [quizId], references: [id])
-  quizId    Int
+  id             Int      @id @default(autoincrement())
+  question       String
+  options        String[]
+  correct_answer String
+  // Explanation of the question
+  explanation    String?
+  // One-to-many relationship with Topic table
+  topic          Topic    @relation(fields: [topicId], references: [id])
+  topicId        Int
+  Answer         Answer[]
 }
 
-model Score {
+// Answer table to store users' answers to questions
+model Answer {
+  id             Int      @id @default(autoincrement())
+  user           User     @relation(fields: [userId], references: [id])
+  userId         Int
+  question       Question @relation(fields: [questionId], references: [id])
+  questionId     Int
+  selectedOption String
+  isCorrect      Boolean
+
+  TopicResult   TopicResult? @relation(fields: [topicResultId], references: [id])
+  topicResultId Int?
+}
+
+// TopicResult table to store users' results for a topic
+model TopicResult {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  topic      Topic    @relation(fields: [topicId], references: [id])
+  topicId    Int
+  average    Float
+  attemptNum Int
+  answers    Answer[]
+}
+
+// Leaderboard table to track scores
+model Leaderboard {
   id        Int      @id @default(autoincrement())
-  topic     String
-  score     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
+  topic     Topic    @relation(fields: [topicId], references: [id])
+  topicId   Int
+  score     Float
+  createdAt DateTime @default(now())
 }

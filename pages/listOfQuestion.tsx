@@ -1,11 +1,12 @@
+import Questions from '@/components/questionsList';
 import { prisma } from '@/lib/db/clients';
-import { Question } from '@prisma/client';
 import { Box, Heading } from '@chakra-ui/react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import React from 'react';
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function Questions({ questions }: Props) {
+export default function Page({ questions }: Props) {
   return (
     <Box>
       <Heading>Questions</Heading>
@@ -24,9 +25,9 @@ export default function Questions({ questions }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const questions = await prisma.question.findMany({
+  const questions = await prisma.question.findFirst({
     where: {
-      topicId: 1,
+      topicId: 3,
     },
   });
 

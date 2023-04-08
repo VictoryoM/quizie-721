@@ -14,7 +14,6 @@ import {
 } from '@chakra-ui/react';
 import { Question } from '@prisma/client';
 import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
-import Questions from './questionsList';
 
 interface Conversation {
   role: string;

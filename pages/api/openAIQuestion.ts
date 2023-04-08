@@ -126,6 +126,7 @@ export default async function handler(
         }
       } else if (findQuestions.length === 10) {
         res.status(200).json({ result: findQuestions });
+        console.log(`\n\nVICTORYO\n\n${JSON.stringify(findQuestions)}\n\n}`);
       }
     }
 

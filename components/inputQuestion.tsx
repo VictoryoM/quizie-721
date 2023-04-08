@@ -7,16 +7,14 @@ import {
   Center,
   Spacer,
   Button,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Box,
+  Radio,
+  RadioGroup,
+  Flex,
 } from '@chakra-ui/react';
 import { Question } from '@prisma/client';
-import axios from 'axios';
 import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
+import Questions from './questionsList';
 
 interface Conversation {
   role: string;
@@ -25,26 +23,20 @@ interface Conversation {
 
 export default function InputQuestion() {
   const [value, setValue] = useState<string>('');
-  const [numberQue, setNumberQue] = useState<string>('');
-  const [conversation, setConversation] = useState<Conversation[]>([]);
-  const [questionAns, setQuestionAns] = useState<string>('');
+  const [level, setLevel] = useState<string>('Easy');
+  // const [conversation, setConversation] = useState<Conversation[]>([]);
+  // const [questionAns, setQuestionAns] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   }, []);
 
-  if (numberQue === '') {
-    setNumberQue('1(one) question');
-  }
-
   const handleSender = async () => {
-    const questionAsked = [
-      {
-        role: 'user',
-        content: `Please generate ${numberQue} on the topic "${value}". The question should have a correct answer and three other wrong answers, with all options shuffled randomly. Please make sure the correct answer and the correct answer in the options are the same and format the output as a JSON array with the following structure: [{ "question": "What is the capital of France?", "correct_answer": "Paris", "options": [ "Tokyo", "London", "Paris", "New York" ] }].`,
-      },
-    ];
+    const questionAsked = {
+      topic: `${value}`,
+      questions: `${level}`,
+    };
     const response = await fetch('/api/openAIQuestion', {
       method: 'POST',
       headers: {
@@ -53,33 +45,20 @@ export default function InputQuestion() {
       body: JSON.stringify({ messages: questionAsked }),
     });
     setValue('');
-    const arrays = await response.json();
-    setConversation([
-      { role: 'Quizie', content: arrays.result.choices[0].message.content },
-    ]);
-    setQuestionAns(arrays.result.choices[0].message.content);
-    const replies = arrays.result.choices[0].message.content;
-    let questions: Question[] = [];
-
-    if (replies !== '') {
-      questions = JSON.parse(replies);
-      const { data } = await axios.post(`/api/questionsPosts`, questions);
-      console.log(data);
-    }
+    setLevel('Easy');
   };
   const handlerRefresh = () => {
     inputRef.current?.focus();
     setValue('');
-    setConversation([]);
-    setQuestionAns('');
+    setLevel('Easy');
   };
 
-  let questions: Question[] = [];
+  // let questions: Question[] = [];
 
-  if (questionAns !== '' && questionAns !== questions.toString()) {
-    questions = JSON.parse(questionAns);
-    // console.log(questions);
-  }
+  // if (questionAns !== '' && questionAns !== questions.toString()) {
+  //   questions = JSON.parse(questionAns);
+  //   // console.log(questions);
+  // }
 
   return (
     <Center>
@@ -96,30 +75,28 @@ export default function InputQuestion() {
             onChange={handleInput}
             // onKeyDown={handleKeyDown}
           />
-          <NumberInput
-            onChange={(number) => {
-              number === '' || number === '1'
-                ? setNumberQue('1(one) question')
-                : setNumberQue(number + ' questions');
-            }}
-            defaultValue={1}
-            min={1}
-            max={10}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <Button colorScheme='blue' onClick={handlerRefresh}>
-            New
-          </Button>
         </InputGroup>
+        <Flex>
+          <Box p='4'>
+            <RadioGroup onChange={setLevel} value={level}>
+              <Stack direction='row'>
+                <Radio value='Easy'>Easy</Radio>
+                <Radio value='Medium'>Medium</Radio>
+                <Radio value='Hard'>Hard</Radio>
+              </Stack>
+            </RadioGroup>
+          </Box>
+          <Spacer />
+          <Box p='4'>
+            <Button colorScheme='blue' onClick={handlerRefresh}>
+              New
+            </Button>
+          </Box>
+        </Flex>
         <Button colorScheme='yellow' onClick={handleSender}>
           Send
         </Button>
-        <div className='textarea'>
+        {/* <div className='textarea'>
           {conversation.map((item, index) => (
             <React.Fragment key={index}>
               <Spacer />
@@ -160,7 +137,7 @@ export default function InputQuestion() {
               )}
             </React.Fragment>
           ))}
-        </Box>
+        </Box> */}
       </Stack>
     </Center>
   );

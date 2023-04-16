@@ -1,5 +1,6 @@
 import InputQuestion from '@/components/inputQuestion';
 import Questions from '@/components/questionsList';
+import UserSignIn from '@/components/signinButton';
 import Head from 'next/head';
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
       </Head>
       <InputQuestion />
       {/* <Questions /> */}
+      <UserSignIn />
     </>
   );
 }

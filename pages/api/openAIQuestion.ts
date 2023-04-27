@@ -2,7 +2,9 @@ import { prisma } from '@/lib/db/clients';
 import { Question, Topic } from '@prisma/client';
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth/next';
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai';
+import { authOptions } from './auth/[...nextauth]';
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -31,11 +33,21 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401).json({ message: 'Unauthorized' });
   try {
     console.log(req.body);
     const topic = req.body.messages.topic;
     const level = req.body.messages.questions;
-    if (!topic || topic === '') throw new Error('Topic is required');
+    const prismaUser = await prisma.user.findUnique({
+      where: { email: session.user?.email! },
+    });
+    if (!prismaUser) {
+      res.status(401).json({ message: 'Unauthorized' });
+    }
+    if (!topic || topic === '') {
+      res.status(401).json({ message: 'Topic is required' });
+    }
 
     // const openAiData: ChatCompletionRequestMessage[] = [
     //   {
@@ -54,6 +66,7 @@ export default async function handler(
       where: {
         titleTopic: topic,
         level: level,
+        quizMasterId: prismaUser!.id,
       },
     });
     if (!createQuiz) {
@@ -61,6 +74,7 @@ export default async function handler(
         data: {
           titleTopic: topic,
           level: level,
+          quizMasterId: prismaUser!.id,
         },
       });
       const findQuestions = await prisma.question.findMany({

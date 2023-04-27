@@ -73,13 +73,15 @@ export default function Navbar() {
           maxW='1250px'
           mx='auto'
         >
-          <Text
+          <Link
             textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
             fontFamily={'heading'}
             color={useColorModeValue('gray.800', 'white')}
+            style={{ textDecoration: 'none' }}
+            href='/'
           >
             Quizie
-          </Text>
+          </Link>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
@@ -95,59 +97,11 @@ export default function Navbar() {
           <Button onClick={toggleColorMode}>
             {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
           </Button>
-          {/* if(session)
-          {
-            <Menu>
-              <MenuButton
-                as={Button}
-                rounded={'full'}
-                variant={'link'}
-                cursor={'pointer'}
-                minW={0}
-              >
-                <Avatar
-                  size={'sm'}
-                  src={'https://avatars.dicebear.com/api/male/username.svg'}
-                />
-              </MenuButton>
-              <MenuList alignItems={'center'}>
-                <br />
-                <Center>
-                  <Avatar
-                    size={'2xl'}
-                    src={'https://avatars.dicebear.com/api/male/username.svg'}
-                  />
-                </Center>
-                <br />
-                <Center>
-                  <p>Username</p>
-                </Center>
-                <br />
-                <MenuDivider />
-                <MenuItem>Your Servers</MenuItem>
-                <MenuItem>Account Settings</MenuItem>
-                <MenuItem onClick={() => signOut()}>Logout</MenuItem>
-              </MenuList>
-            </Menu>
-          }
-          else
-          {
-            <Button
-              as={'a'}
-              display={{ base: 'none', md: 'inline-flex' }}
-              fontSize={'sm'}
-              fontWeight={600}
-              color={'white'}
-              bg={'pink.400'}
-              onClick={() => signIn()}
-              _hover={{
-                bg: 'pink.300',
-              }}
-            >
-              Sign In
-            </Button>
-          } */}
-          <UserSignIn />
+          <UserSignIn
+            user={session?.user}
+            onSignIn={signIn}
+            onSignOut={signOut}
+          />
         </Stack>
       </Flex>
 

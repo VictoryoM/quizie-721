@@ -9,28 +9,14 @@ import {
   MenuDivider,
   MenuItem,
 } from '@chakra-ui/react';
-import { getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
-export default function UserSignIn() {
-  const { data: session } = useSession();
-  // if (session) {
-  //   return (
-  //     <>
-  //       Signed in as {session.user?.email} <br />
-  //       <button onClick={() => signOut()}>Sign out</button>
-  //     </>
-  //   );
-  // }
-  // return (
-  //   <>
-  //     Not signed in <br />
-  //     <button onClick={() => signIn()}>Sign in</button>
-  //   </>
-  // );
-  console.log(session?.user);
+export default function UserSignIn(props: any) {
+  const { user, onSignIn, onSignOut } = props;
+  console.log(user);
 
-  if (session) {
+  if (user) {
     return (
       <>
         <Menu>
@@ -44,8 +30,8 @@ export default function UserSignIn() {
             <Avatar
               size={'sm'}
               src={
-                session.user?.image
-                  ? `${session.user?.image}}`
+                user.image
+                  ? `${user.image}}`
                   : 'https://avatars.dicebear.com/api/male/username.svg'
               }
             />
@@ -56,21 +42,21 @@ export default function UserSignIn() {
               <Avatar
                 size={'2xl'}
                 src={
-                  session.user?.image
-                    ? `${session.user?.image}}`
+                  user.image
+                    ? `${user.image}}`
                     : 'https://avatars.dicebear.com/api/male/username.svg'
                 }
               />
             </Center>
             <br />
             <Center>
-              <p>{session.user?.name}</p>
+              <p>{user.name}</p>
             </Center>
             <br />
             <MenuDivider />
             <MenuItem>Your Dashboard</MenuItem>
             <MenuItem>Account Settings</MenuItem>
-            <MenuItem onClick={() => signOut()}>Logout</MenuItem>
+            <MenuItem onClick={() => onSignOut()}>Logout</MenuItem>
           </MenuList>
         </Menu>
       </>
@@ -85,7 +71,7 @@ export default function UserSignIn() {
         fontWeight={600}
         color={'white'}
         bg={'pink.400'}
-        onClick={() => signIn()}
+        onClick={() => onSignIn()}
         _hover={{
           bg: 'pink.300',
         }}
@@ -96,12 +82,11 @@ export default function UserSignIn() {
   );
 }
 
-export async function getServerSideProps(context: any) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  console.log(session?.user?.name);
-  return {
-    props: {
-      session,
-    },
-  };
-}
+// export async function getServerSideProps(context: any) {
+//   const session = await getServerSession(context.req, context.res, authOptions);
+//   return {
+//     props: {
+//       session,
+//     },
+//   };
+// }

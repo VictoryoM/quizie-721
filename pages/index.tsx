@@ -2,8 +2,16 @@ import InputQuestion from '@/components/inputQuestion';
 import Questions from '@/components/questionsList';
 import UserSignIn from '@/components/signinButton';
 import Head from 'next/head';
+import Trial from './trial';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]';
+import { prisma } from '@/lib/db/clients';
+import TopicLists from '@/components/topicList';
+import { Center, Divider } from '@chakra-ui/react';
 
-export default function Home() {
+export default function Home({ topics }: any) {
+  // const { data: session } = useSession();
   return (
     <>
       <Head>
@@ -14,7 +22,23 @@ export default function Home() {
       </Head>
       <InputQuestion />
       {/* <Questions /> */}
-      <UserSignIn />
+      {/* <UserSignIn user={session?.user} onSignIn={signIn} onSignOut={signOut} /> */}
+      <Center m={[2, 3]} height='50px'>
+        <Divider orientation='vertical' />
+      </Center>
+      <TopicLists topics={topics} />
     </>
   );
+}
+
+export async function getServerSideProps(context: any) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  const topics = await prisma.topic.findMany();
+
+  return {
+    props: {
+      session,
+      topics,
+    },
+  };
 }

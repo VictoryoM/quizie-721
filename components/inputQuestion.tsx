@@ -12,9 +12,8 @@ import {
   RadioGroup,
   Flex,
 } from '@chakra-ui/react';
-import { Question } from '@prisma/client';
+import Link from 'next/link';
 import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
-import Questions from './questionsList';
 
 interface Conversation {
   role: string;
@@ -93,51 +92,16 @@ export default function InputQuestion() {
             </Button>
           </Box>
         </Flex>
+        {/* <Link
+          href={{
+            pathname: '/trial',
+            query: { titleTopic: `${value}`, level: `${level}` },
+          }}
+        > */}
         <Button colorScheme='yellow' onClick={handleSender}>
           Send
         </Button>
-        {/* <div className='textarea'>
-          {conversation.map((item, index) => (
-            <React.Fragment key={index}>
-              <Spacer />
-              {item.role === 'Quizie' ? (
-                <div>
-                  <strong>Quizie</strong>
-                  <br />
-                  {item.content}
-                </div>
-              ) : (
-                <div>
-                  <strong>User</strong>
-                  <br />
-                  {item.content}
-                </div>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-        <Box>
-          {questions.map((item, index) => (
-            <React.Fragment key={index}>
-              <Spacer />
-              {item.question !== '' ? (
-                <div>
-                  <br />
-                  {item.question}
-                  {item.correct_answer}
-                  {item.options?.map((option, index) => (
-                    <React.Fragment key={index}>
-                      <br />
-                      {option}
-                    </React.Fragment>
-                  ))}
-                </div>
-              ) : (
-                <div></div>
-              )}
-            </React.Fragment>
-          ))}
-        </Box> */}
+        {/* </Link> */}
       </Stack>
     </Center>
   );

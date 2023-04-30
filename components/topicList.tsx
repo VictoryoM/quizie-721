@@ -11,10 +11,11 @@ import {
 } from '@chakra-ui/react';
 import { InferGetServerSidePropsType } from 'next';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function TopicLists(props: any) {
   const { topics } = props;
-  console.log(topics);
+  // const [refresh, setRefresh] = useState(false); // initialize state for refresh
 
   if (!topics || topics.length === 0)
     return (
@@ -24,6 +25,11 @@ export default function TopicLists(props: any) {
         </Center>
       </Box>
     );
+
+  // const handleRefresh = () => {
+  //   setRefresh(true); // set the refresh state to true
+  //   console.log(refresh);
+  // };
 
   return (
     <Box m={[5, 8]}>
@@ -37,7 +43,7 @@ export default function TopicLists(props: any) {
             >
               <Link
                 href={{
-                  pathname: '/trial',
+                  pathname: '/quiz',
                   query: {
                     titleTopic: `${topic.titleTopic}`,
                     level: `${topic.level}`,
@@ -50,6 +56,9 @@ export default function TopicLists(props: any) {
               </Link>
             </Tooltip>
           ))}
+          {/* <Button onClick={handleRefresh} colorScheme='teal' variant='outline'>
+            Refresh
+          </Button> */}
         </Stack>
       </Center>
     </Box>

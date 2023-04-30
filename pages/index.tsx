@@ -2,7 +2,7 @@ import InputQuestion from '@/components/inputQuestion';
 import Questions from '@/components/questionsList';
 import UserSignIn from '@/components/signinButton';
 import Head from 'next/head';
-import Trial from './trial';
+import Trial from './quiz';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
@@ -12,6 +12,7 @@ import { Center, Divider } from '@chakra-ui/react';
 
 export default function Home({ topics }: any) {
   // const { data: session } = useSession();
+  console.log(topics);
   return (
     <>
       <Head>

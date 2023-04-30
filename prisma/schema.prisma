@@ -78,30 +78,30 @@ model Answer {
   selectedOption String
   isCorrect      Boolean
 
-  TopicResult   TopicResult? @relation(fields: [topicResultId], references: [id])
+  TopicResult   TopicResult? @relation(fields: [topicResultId], references: [id], onDelete: Cascade)
   topicResultId Int?
 }
 
 // TopicResult table to store users' results for a topic
 model TopicResult {
   id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
   topic      Topic    @relation(fields: [topicId], references: [id])
   topicId    Int
   average    Float
-  attemptNum Int
+  attemptNum Int      @default(0)
   answers    Answer[]
 }
 
 // Leaderboard table to track scores
 model Leaderboard {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  topic     Topic    @relation(fields: [topicId], references: [id])
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
   topicId   Int
-  score     Float
+  score     Float    @default(0)
   createdAt DateTime @default(now())
 }
 

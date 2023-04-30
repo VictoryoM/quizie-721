@@ -45,7 +45,7 @@ export default async function handler(
     if (!prismaUser) {
       res.status(401).json({ message: 'Unauthorized' });
     }
-    if (!topic || topic === '') {
+    if (!topic || topic === '' || topic.length < 3) {
       res.status(401).json({ message: 'Topic is required' });
     }
 
@@ -69,7 +69,7 @@ export default async function handler(
         quizMasterId: prismaUser!.id,
       },
     });
-    if (!createQuiz) {
+    if (!createQuiz && topic.length >= 3 && level.length !== 0) {
       createQuiz = await prisma.topic.create({
         data: {
           titleTopic: topic,

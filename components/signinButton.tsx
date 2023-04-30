@@ -14,7 +14,7 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function UserSignIn(props: any) {
   const { user, onSignIn, onSignOut } = props;
-  console.log(user);
+  // console.log(user);
 
   if (user) {
     return (

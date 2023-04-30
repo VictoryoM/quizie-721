@@ -1,6 +1,6 @@
 import type { InferGetServerSidePropsType } from 'next';
 import { prisma } from '@/lib/db/clients';
-import type { TopicResult } from '@prisma/client'
+import type { TopicResult } from '@prisma/client';
 import {
   Box,
   Button,
@@ -31,15 +31,14 @@ export default function Quiz({
       },
       body: JSON.stringify({ messages: answers }),
     });
-    const {average, attemptNum}: TopicResult = (await response.json())
-    const percentage = (average / (attemptNum*10)) * 100
+    const { average, attemptNum }: TopicResult = await response.json();
+    const percentage = (average / (attemptNum * 10)) * 100;
     console.log(`${percentage}%`);
-    
+
     // setAnswers([]);
   };
 
   const setValue = (event: any) => {
-    // console.log(event);
     const value = event;
     const answer = JSON.parse(value); // Parse the string value into an object
     const answeredQuestion = answers.find((q) => q.id === answer.questionId);
@@ -64,9 +63,6 @@ export default function Quiz({
 
   return (
     <>
-      {/* {Object.values(questions).map((question) => (
-        <div key={question.id}>{question.question}</div>
-      ))} */}
       <Box>
         <OrderedList>
           {questions.map((question) => (

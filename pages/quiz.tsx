@@ -1,5 +1,6 @@
 import type { InferGetServerSidePropsType } from 'next';
 import { prisma } from '@/lib/db/clients';
+import type { TopicResult } from '@prisma/client'
 import {
   Box,
   Button,
@@ -30,7 +31,11 @@ export default function Quiz({
       },
       body: JSON.stringify({ messages: answers }),
     });
-    setAnswers([]);
+    const {average, attemptNum}: TopicResult = (await response.json())
+    const percentage = (average / (attemptNum*10)) * 100
+    console.log(`${percentage}%`);
+    
+    // setAnswers([]);
   };
 
   const setValue = (event: any) => {

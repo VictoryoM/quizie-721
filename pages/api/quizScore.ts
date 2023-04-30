@@ -1,8 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from './auth/[...nextauth]';
-import { prisma } from '@/lib/db/clients';
+import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "./auth/[...nextauth]";
+import { prisma } from "@/lib/db/clients";
+import QuizScoreRequest from "@/models/requests/QuizScoreRequest";
+import Message from "@/models/requests/Message";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,84 +12,73 @@ export default async function handler(
 ) {
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session) return res.status(401).json({ message: 'Unauthorized' });
+  if (!session) return res.status(401).json({ message: "Unauthorized" });
 
   try {
-    const pickedAnswers = req.body.messages;
+    const request = <QuizScoreRequest>req.body;
     const prismaUser = await prisma.user.findUnique({
       where: { email: session.user?.email! },
     });
-    if (!prismaUser || !pickedAnswers || pickedAnswers.length === 0) {
-      res.status(401).json({ message: 'Unauthorized' });
-    } else if (pickedAnswers.length > 0 && prismaUser) {
-      const answerTopicId = await prisma.question.findUnique({
-        where: { id: pickedAnswers[0].id },
-      });
+    if (!prismaUser || !request || request.messages.length === 0)
+      return res.status(400).json({ message: "Bad Request" });
 
-      const topicTaken = await prisma.topicResult.findFirst({
-        where: { userId: prismaUser!.id, topicId: answerTopicId?.topicId },
-      });
-      if (topicTaken === null) {
-        const topicResult = await prisma.topicResult.create({
-          data: {
-            userId: prismaUser!.id,
-            topicId: answerTopicId?.topicId!,
-            average: 0,
-            attemptNum: 1,
-          },
-        });
-      } else {
-        const topicResult = await prisma.topicResult.update({
-          where: { id: topicTaken.id },
-          data: {
-            attemptNum: topicTaken?.attemptNum! + 1,
-          },
-        });
-      }
+    const answerTopicId = <number>request.messages[0].id;
 
-      let correctAnswers = 0;
-      const createAnswer = await Promise.all(
-        pickedAnswers.map(async (answer: any) => {
-          const { id: qesId, answer: choosenAnswer } = answer;
-          const topicAverage = await prisma.topicResult.findFirst({
-            where: { userId: prismaUser!.id, topicId: answerTopicId?.topicId },
-          });
-          let isAnswerCorrect = false;
-          const answerChecker = await prisma.question.findUnique({
-            where: { id: qesId },
-          });
-          if (answerChecker?.correct_answer === choosenAnswer) {
-            isAnswerCorrect = true;
-            correctAnswers = correctAnswers + 1;
-          } else {
-            isAnswerCorrect = false;
-          }
-          const post = await prisma.answer.create({
-            data: {
-              selectedOption: choosenAnswer,
-              questionId: qesId,
-              userId: prismaUser!.id,
-              isCorrect: isAnswerCorrect,
-              topicResultId: topicAverage?.id,
-            },
-          });
+    let topicResult = await prisma.topicResult.findFirst({
+      where: { userId: prismaUser!.id, topicId: answerTopicId },
+    });
 
-          console.log(correctAnswers);
-        })
-      );
-      const updateTopicResult = await prisma.topicResult.update({
-        where: { id: topicTaken?.id! },
+    if (topicResult === null) {
+      topicResult = await prisma.topicResult.create({
         data: {
-          average: correctAnswers,
+          userId: prismaUser!.id,
+          topicId: answerTopicId,
+          average: 0,
+          attemptNum: 1,
         },
       });
-
-      res.status(200).json({ result: pickedAnswers });
     } else {
-      res.status(401).json({ message: 'You are not authorized' });
+      topicResult.attemptNum += 1;
     }
+
+    let correctAnswers = topicResult.average;
+
+    const prismaRequest = await Promise.all(
+      request.messages.map(async (message: Message) => {
+        let isAnswerCorrect = false;
+        const answerChecker = await prisma.question.findUnique({
+          where: { id: message.id },
+        });
+        if (answerChecker?.correct_answer === message.answer) {
+          isAnswerCorrect = true;
+          correctAnswers = correctAnswers + 1;
+        } else {
+          isAnswerCorrect = false;
+        }
+        return {
+          selectedOption: message.answer,
+          questionId: message.id,
+          userId: prismaUser!.id,
+          isCorrect: isAnswerCorrect,
+          topicResultId: topicResult?.id,
+        };
+      })
+    );
+
+    await prisma.answer.createMany({
+      data: prismaRequest,
+    });
+
+    topicResult.average = correctAnswers;
+
+    const updateTopicResult = await prisma.topicResult.update({
+      where: {id: topicResult.id},
+      data: topicResult
+    });
+
+    res.status(200).json(topicResult);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json({ error: "An error occurred." });
   }
 }

@@ -18,6 +18,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "models/requests/QuizScoreRequest.ts", "models/QuizScoreRequest.type"],
   "exclude": ["node_modules"]
 }

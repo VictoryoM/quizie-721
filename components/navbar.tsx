@@ -40,7 +40,10 @@ export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
-    <Box>
+    <Box 
+    position={'sticky'}
+    top={0}
+    zIndex={1}>
       <Flex
         bg={useColorModeValue('white', 'gray.800')}
         color={useColorModeValue('gray.600', 'white')}
@@ -51,7 +54,7 @@ export default function Navbar() {
         borderStyle={'solid'}
         borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}
-        position={'sticky'}
+       
       >
         <Flex
           flex={{ base: 1, md: 'auto' }}

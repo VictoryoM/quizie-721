@@ -10,14 +10,14 @@ export default function Footer() {
   return (
     <Box 
       as="footer"
-      minHeight="100px"
+      minHeight="50px"
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
       position="fixed"
       bottom={0}
       width="100%"
     >
-      <Box py={10}>
+      <Box py={2}>
         <Flex
           align={"center"}
           _before={{
@@ -37,7 +37,7 @@ export default function Footer() {
         >
           <Logo />
         </Flex>
-        <Text pt={6} fontSize={"sm"} textAlign={"center"}>
+        <Text pt={1} fontSize={"sm"} textAlign={"center"}>
           © 2023 Quizie. All rights reserved
         </Text>
       </Box>

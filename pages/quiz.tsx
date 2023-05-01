@@ -9,6 +9,7 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  Text,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
@@ -63,54 +64,39 @@ export default function Quiz({
   };
 
   return (
-    <>
-      <Box>
-        <OrderedList>
-          {questions.map((question) => (
-            <ListItem key={question.id}>
-              {question.question}
-              <RadioGroup onChange={setValue}>
-                <Stack>
-                  <Radio
-                    value={JSON.stringify({
-                      pickedAnswer: question.options[0],
-                      questionId: question.id,
-                    })}
-                  >
-                    {question.options[0]}
-                  </Radio>
-                  <Radio
-                    value={JSON.stringify({
-                      pickedAnswer: question.options[1],
-                      questionId: question.id,
-                    })}
-                  >
-                    {question.options[1]}
-                  </Radio>
-                  <Radio
-                    value={JSON.stringify({
-                      pickedAnswer: question.options[2],
-                      questionId: question.id,
-                    })}
-                  >
-                    {question.options[2]}
-                  </Radio>
-                  <Radio
-                    value={JSON.stringify({
-                      pickedAnswer: question.options[3],
-                      questionId: question.id,
-                    })}
-                  >
-                    {question.options[3]}
-                  </Radio>
-                </Stack>
-              </RadioGroup>
-            </ListItem>
-          ))}
-        </OrderedList>
-        <Button onClick={submitHandler}>Submit</Button>
-      </Box>
-    </>
+    
+       <>
+  <Box w={['100%', '80%']} mt={'50px'} mx={'auto'} mb={'200px'}>
+    <OrderedList spacing={4}>
+      {questions.map((question) => (
+        <ListItem key={question.id} py={4}>
+          <Text fontSize={['md', 'lg']} fontWeight="bold">
+            {question.question}
+          </Text>
+          <RadioGroup onChange={setValue} mt={4}>
+            <Stack spacing={2}>
+              {question.options.map((option, index) => (
+                <Radio
+                  key={index}
+                  value={JSON.stringify({
+                    pickedAnswer: option,
+                    questionId: question.id,
+                  })}
+                >
+                  <Text fontSize={['md', 'lg']}>{option}</Text>
+                </Radio>
+              ))}
+            </Stack>
+          </RadioGroup>
+        </ListItem>
+      ))}
+    </OrderedList>
+    <Button onClick={submitHandler} mt={8} w="100%" colorScheme="blue">
+      Submit
+    </Button>
+  </Box>
+</>
+
   );
 }
 

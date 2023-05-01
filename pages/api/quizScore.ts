@@ -1,10 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "./auth/[...nextauth]";
-import { prisma } from "@/lib/db/clients";
-import QuizScoreRequest from "@/models/requests/QuizScoreRequest";
-import Message from "@/models/requests/Message";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from './auth/[...nextauth]';
+import { prisma } from '@/lib/db/clients';
+import QuizScoreRequest from '@/models/requests/QuizScoreRequest';
+import Message from '@/models/requests/Message';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,7 +12,7 @@ export default async function handler(
 ) {
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session) return res.status(401).json({ message: "Unauthorized" });
+  if (!session) return res.status(401).json({ message: 'Unauthorized' });
 
   try {
     const request = <QuizScoreRequest>req.body;
@@ -20,19 +20,23 @@ export default async function handler(
       where: { email: session.user?.email! },
     });
     if (!prismaUser || !request || request.messages.length === 0)
-      return res.status(400).json({ message: "Bad Request" });
+      return res.status(400).json({ message: 'Bad Request' });
 
     const answerTopicId = <number>request.messages[0].id;
+    console.log(answerTopicId);
+    const findQuest = await prisma.question.findUnique({
+      where: { id: answerTopicId },
+    });
 
     let topicResult = await prisma.topicResult.findFirst({
-      where: { userId: prismaUser!.id, topicId: answerTopicId },
+      where: { userId: prismaUser!.id, topicId: findQuest?.topicId },
     });
 
     if (topicResult === null) {
       topicResult = await prisma.topicResult.create({
         data: {
           userId: prismaUser!.id,
-          topicId: answerTopicId,
+          topicId: findQuest?.topicId!,
           average: 0,
           attemptNum: 1,
         },
@@ -72,13 +76,13 @@ export default async function handler(
     topicResult.average = correctAnswers;
 
     const updateTopicResult = await prisma.topicResult.update({
-      where: {id: topicResult.id},
-      data: topicResult
+      where: { id: topicResult.id },
+      data: topicResult,
     });
 
     res.status(200).json(topicResult);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "An error occurred." });
+    res.status(500).json({ error: 'An error occurred.' });
   }
 }

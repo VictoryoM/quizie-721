@@ -32,6 +32,7 @@ export default function Quiz({
       body: JSON.stringify({ messages: answers }),
     });
     const { average, attemptNum }: TopicResult = await response.json();
+    console.log(average);
     const percentage = (average / (attemptNum * 10)) * 100;
     console.log(`${percentage}%`);
 

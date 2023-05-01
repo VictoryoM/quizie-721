@@ -23,7 +23,7 @@ export default async function handler(
       return res.status(400).json({ message: 'Bad Request' });
 
     const answerTopicId = <number>request.messages[0].id;
-    console.log(answerTopicId);
+    // console.log(answerTopicId);
     const findQuest = await prisma.question.findUnique({
       where: { id: answerTopicId },
     });

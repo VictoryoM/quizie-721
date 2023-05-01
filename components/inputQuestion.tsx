@@ -46,18 +46,11 @@ export default function InputQuestion() {
     setValue('');
     setLevel('Easy');
   };
-  const handlerRefresh = () => {
-    inputRef.current?.focus();
-    setValue('');
-    setLevel('Easy');
-  };
-
-  // let questions: Question[] = [];
-
-  // if (questionAns !== '' && questionAns !== questions.toString()) {
-  //   questions = JSON.parse(questionAns);
-  //   // console.log(questions);
-  // }
+  // const handlerRefresh = () => {
+  //   inputRef.current?.focus();
+  //   setValue('');
+  //   setLevel('Easy');
+  // };
 
   return (
     <Center>
@@ -75,7 +68,7 @@ export default function InputQuestion() {
             // onKeyDown={handleKeyDown}
           />
         </InputGroup>
-        <Flex>
+        <Center>
           <Box p='4'>
             <RadioGroup onChange={setLevel} value={level}>
               <Stack direction='row'>
@@ -85,13 +78,13 @@ export default function InputQuestion() {
               </Stack>
             </RadioGroup>
           </Box>
-          <Spacer />
+          {/* <Spacer />
           <Box p='4'>
             <Button colorScheme='blue' onClick={handlerRefresh}>
               New
             </Button>
-          </Box>
-        </Flex>
+          </Box> */}
+        </Center>
         {/* <Link
           href={{
             pathname: '/trial',

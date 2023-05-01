@@ -12,7 +12,7 @@ import { Center, Divider } from '@chakra-ui/react';
 
 export default function Home({ topics }: any) {
   // const { data: session } = useSession();
-  console.log(topics);
+  // console.log(topics);
   return (
     <>
       <Head>

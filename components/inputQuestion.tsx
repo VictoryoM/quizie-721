@@ -53,7 +53,7 @@ export default function InputQuestion() {
   // };
 
   return (
-    <Center>
+    <Center mt={'10'}>
       <Stack w='40%' spacing={4}>
         <InputGroup>
           <InputLeftElement

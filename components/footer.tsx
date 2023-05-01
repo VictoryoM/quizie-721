@@ -8,9 +8,14 @@ const Logo = (props: any) => {
 
 export default function Footer() {
   return (
-    <Box
+    <Box 
+      as="footer"
+      minHeight="100px"
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
+      position="fixed"
+      bottom={0}
+      width="100%"
     >
       <Box py={10}>
         <Flex

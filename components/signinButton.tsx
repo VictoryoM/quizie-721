@@ -66,7 +66,6 @@ export default function UserSignIn(props: any) {
     <>
       <Button
         as={'a'}
-        display={{ base: 'none', md: 'inline-flex' }}
         fontSize={'sm'}
         fontWeight={600}
         color={'white'}

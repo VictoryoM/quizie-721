@@ -4,6 +4,7 @@ import '@/styles/globals.css';
 import { ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
+import { Flex } from '@chakra-ui/react'
 
 export default function App({
   Component,
@@ -12,9 +13,13 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <ChakraProvider>
-        <Navbar />
-        <Component {...pageProps} />
-        <Footer />
+        <Flex direction={'column'} minH={"100vh"}>
+          <Flex direction={'column'} grow={1}>
+            <Navbar />
+            <Component {...pageProps} />
+          </Flex>
+          <Footer />
+        </Flex>
       </ChakraProvider>
     </SessionProvider>
   );

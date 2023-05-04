@@ -2,16 +2,16 @@ import type { InferGetServerSidePropsType } from 'next';
 import { prisma } from '@/lib/db/clients';
 import type { TopicResult } from '@prisma/client';
 import {
-  Box,
+  Center,
   Button,
-  ListItem,
-  OrderedList,
   Radio,
   RadioGroup,
   Stack,
   Text,
+  Box,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 export default function Quiz({
   questions,
@@ -64,38 +64,50 @@ export default function Quiz({
   };
 
   return (
-    
-       <>
-  <Box w={['100%', '80%']} mt={'50px'} mx={'auto'} mb={'200px'}>
-    <OrderedList spacing={4}>
-      {questions.map((question) => (
-        <ListItem key={question.id} py={4}>
-          <Text fontSize={['md', 'lg']} fontWeight="bold">
-            {question.question}
-          </Text>
-          <RadioGroup onChange={setValue} mt={4}>
-            <Stack spacing={2}>
-              {question.options.map((option, index) => (
-                <Radio
-                  key={index}
-                  value={JSON.stringify({
-                    pickedAnswer: option,
-                    questionId: question.id,
-                  })}
-                >
-                  <Text fontSize={['md', 'lg']}>{option}</Text>
-                </Radio>
-              ))}
-            </Stack>
-          </RadioGroup>
-        </ListItem>
-      ))}
-    </OrderedList>
-    <Button onClick={submitHandler} mt={8} w="100%" colorScheme="blue">
-      Submit
-    </Button>
-  </Box>
-</>
+
+    <>
+      <Tabs variant={'soft-rounded'} colorScheme='green' isFitted my={10}>
+        <TabList>
+          {questions.map((question, index) => (
+            <Tab key={index}>{`Q ${index + 1}`}</Tab>
+          ))}
+        </TabList>
+        <TabPanels>
+          {questions.map((question, index) => (
+            <TabPanel key={index}>
+              <Box mx={['5%', 'auto']} w={['90%', '70%']} mt={10}>
+                <Text fontSize={['md', 'lg']} fontWeight="bold">
+                  {question.question}
+                </Text>
+                <RadioGroup onChange={setValue} mt={4}>
+                  <Stack spacing={2}>
+                    {question.options.map((option, index) => (
+                      <Radio
+                        key={index}
+                        value={JSON.stringify({
+                          pickedAnswer: option,
+                          questionId: question.id,
+                        })}
+                      >
+                        <Text fontSize={['md', 'lg']}>{option}</Text>
+                      </Radio>
+                    ))}
+                  </Stack>
+                </RadioGroup>
+              </Box>
+
+
+            </TabPanel>
+          ))}
+        </TabPanels>
+      </Tabs>
+      <Center>
+        <Button onClick={submitHandler} mt={8} w="20%" colorScheme="green" >
+          Submit
+        </Button>
+      </Center>
+
+    </>
 
   );
 }

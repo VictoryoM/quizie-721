@@ -61,7 +61,7 @@ export default function InputQuestion() {
             children={<QuestionIcon color='red.300' />}
           />
           <Input
-            type='tel'
+            type='text'
             placeholder='Topic'
             value={value}
             onChange={handleInput}

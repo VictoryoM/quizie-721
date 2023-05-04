@@ -90,7 +90,6 @@ export default function Quiz({
   };
 
   return (
-
     <>
       <Tabs variant={'soft-rounded'} colorScheme='green' isFitted my={10}>
         <TabList>
@@ -154,7 +153,6 @@ export default function Quiz({
         </Button>
       </Center>
     </>
-
   );
 }
 

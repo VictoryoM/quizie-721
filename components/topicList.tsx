@@ -15,7 +15,6 @@ import { useEffect, useState } from 'react';
 
 export default function TopicLists(props: any) {
   const { topics } = props;
-  // const [refresh, setRefresh] = useState(false); // initialize state for refresh
 
   if (!topics || topics.length === 0)
     return (
@@ -26,41 +25,35 @@ export default function TopicLists(props: any) {
       </Box>
     );
 
-  // const handleRefresh = () => {
-  //   setRefresh(true); // set the refresh state to true
-  //   console.log(refresh);
-  // };
-
   return (
-    <Box m={[5, 8]}>
-      <Center>
-        <Stack direction='row' spacing={4} align='center'>
-          {topics.map((topic: any) => (
-            <Tooltip
-              key={topic.id}
-              label={topic.level}
-              aria-label={topic.titleTopic}
-            >
-              <Link
-                href={{
-                  pathname: '/quiz',
-                  query: {
-                    titleTopic: `${topic.titleTopic}`,
-                    level: `${topic.level}`,
-                  },
-                }}
-              >
-                <Button colorScheme='teal' variant='outline'>
-                  {topic.titleTopic}
-                </Button>
-              </Link>
-            </Tooltip>
-          ))}
-          {/* <Button onClick={handleRefresh} colorScheme='teal' variant='outline'>
-            Refresh
-          </Button> */}
-        </Stack>
-      </Center>
-    </Box>
+    <Box maxWidth={'100%'} display="flex" justifyContent={['center']} flexWrap="wrap">
+  {topics.map((topic: any, index: number) => (
+    <Tooltip
+      key={topic.id}
+      label={topic.level}
+      aria-label={topic.titleTopic}
+    >
+      <Link
+        href={{
+          pathname: '/quiz',
+          query: {
+            titleTopic: `${topic.titleTopic}`,
+            level: `${topic.level}`,
+          },
+        }}
+      >
+        <Button
+          colorScheme={['red', 'blue', 'green', 'purple', 'pink'][index % 5]} 
+          variant='outline'
+          my={[1, 2]}
+          mx={[1, 2]}
+        >
+          {topic.titleTopic}
+        </Button>
+      </Link>
+    </Tooltip>
+  ))}
+</Box>
+
   );
 }

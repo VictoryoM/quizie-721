@@ -90,6 +90,7 @@ model TopicResult {
   topic      Topic    @relation(fields: [topicId], references: [id])
   topicId    Int
   average    Float
+  correctNum Int      @default(0)
   attemptNum Int      @default(0)
   answers    Answer[]
 }

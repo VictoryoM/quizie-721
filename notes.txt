@@ -1,0 +1,111 @@
+    <>
+      <Tabs>
+        <TabList>
+          {questions.map((question, index) => (
+            <Tab key={index}>{`Question ${index + 1}`}</Tab>
+          ))}
+        </TabList>
+        <TabPanels>
+          {questions.map((question, index) => (
+            <TabPanel key={index}>
+
+              <Text fontSize={['md', 'lg']} fontWeight="bold">
+                {question.question}
+              </Text>
+              <RadioGroup onChange={setValue} mt={4}>
+                <Stack spacing={2}>
+                  {question.options.map((option, index) => (
+                    <Radio
+                      key={index}
+                      value={JSON.stringify({
+                        pickedAnswer: option,
+                        questionId: question.id,
+                      })}
+                    >
+                      <Text fontSize={['md', 'lg']}>{option}</Text>
+                    </Radio>
+                  ))}
+                </Stack>
+              </RadioGroup>
+
+            </TabPanel>
+          ))}
+        </TabPanels>
+      </Tabs>
+
+  	<Button onClick={submitHandler} mt={8} w="100%" colorScheme="blue">
+          Submit
+        </Button>
+
+    </>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################################################################
+
+
+
+   <>
+      <Tabs>
+        <TabList>
+          <Tab>One</Tab>
+          <Tab>Two</Tab>
+          <Tab>Three</Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            <p>one!</p>
+          </TabPanel>
+          <TabPanel>
+            <p>two!</p>
+          </TabPanel>
+          <TabPanel>
+            <p>three!</p>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+      <Box w={['100%', '80%']} mt={'50px'} mx={'auto'} mb={'200px'}>
+        <OrderedList spacing={4}>
+          {questions.map((question) => (
+            <ListItem key={question.id} py={4}>
+              <Text fontSize={['md', 'lg']} fontWeight="bold">
+                {question.question}        
+              </Text>
+              <RadioGroup onChange={setValue} mt={4}>
+                <Stack spacing={2}>
+                  {question.options.map((option, index) => (
+                    <Radio
+                      key={index}
+                      value={JSON.stringify({
+                        pickedAnswer: option,
+                        questionId: question.id,
+                      })}
+                    >
+                      <Text fontSize={['md', 'lg']}>{option}</Text>
+                    </Radio>
+                  ))}
+                </Stack>
+              </RadioGroup>
+            </ListItem>
+          ))}
+        </OrderedList>
+        <Button onClick={submitHandler} mt={8} w="100%" colorScheme="blue">
+          Submit
+        </Button>
+      </Box>
+    </>

@@ -2,15 +2,16 @@ import type { InferGetServerSidePropsType } from 'next';
 import { prisma } from '@/lib/db/clients';
 import type { TopicResult } from '@prisma/client';
 import {
-  Box,
+  Center,
   Button,
-  ListItem,
-  OrderedList,
   Radio,
   RadioGroup,
   Stack,
+  Text,
+  Box,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 
 export default function Quiz({
   questions,
@@ -64,52 +65,51 @@ export default function Quiz({
 
   return (
     <>
-      <Box>
-        <OrderedList>
-          {questions.map((question) => (
-            <ListItem key={question.id}>
-              {question.question}
-              <RadioGroup onChange={setValue}>
-                <Stack>
-                  <Radio
-                    value={JSON.stringify({
-                      pickedAnswer: question.options[0],
-                      questionId: question.id,
-                    })}
-                  >
-                    {question.options[0]}
-                  </Radio>
-                  <Radio
-                    value={JSON.stringify({
-                      pickedAnswer: question.options[1],
-                      questionId: question.id,
-                    })}
-                  >
-                    {question.options[1]}
-                  </Radio>
-                  <Radio
-                    value={JSON.stringify({
-                      pickedAnswer: question.options[2],
-                      questionId: question.id,
-                    })}
-                  >
-                    {question.options[2]}
-                  </Radio>
-                  <Radio
-                    value={JSON.stringify({
-                      pickedAnswer: question.options[3],
-                      questionId: question.id,
-                    })}
-                  >
-                    {question.options[3]}
-                  </Radio>
-                </Stack>
-              </RadioGroup>
-            </ListItem>
+      <Tabs variant={'soft-rounded'} colorScheme='green' isFitted my={10}>
+        <TabList>
+          {questions.map((question, index) => (
+            <Tab key={index}>{`Q ${index + 1}`}</Tab>
           ))}
-        </OrderedList>
-        <Button onClick={submitHandler}>Submit</Button>
-      </Box>
+        </TabList>
+        <TabPanels>
+          {questions.map((question, index) => (
+            <TabPanel key={index}>
+              <Box
+                mx={['5%', 'auto']}
+                w={['90%', '70%']}
+                mt={10}
+                boxShadow='xl'
+                p='6'
+                rounded='md'
+              >
+                <Text fontSize={['md', 'lg']} fontWeight='bold'>
+                  {question.question}
+                </Text>
+                <RadioGroup onChange={setValue} mt={4}>
+                  <Stack spacing={2}>
+                    {question.options.map((option, index) => (
+                      <Radio
+                        key={index}
+                        value={JSON.stringify({
+                          pickedAnswer: option,
+                          questionId: question.id,
+                        })}
+                      >
+                        <Text fontSize={['md', 'lg']}>{option}</Text>
+                      </Radio>
+                    ))}
+                  </Stack>
+                </RadioGroup>
+              </Box>
+            </TabPanel>
+          ))}
+        </TabPanels>
+      </Tabs>
+      <Center>
+        <Button onClick={submitHandler} mt={8} w='20%' colorScheme='green'>
+          Submit
+        </Button>
+      </Center>
     </>
   );
 }

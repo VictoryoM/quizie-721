@@ -46,6 +46,7 @@ export default async function handler(
     }
 
     let correctAnswers = topicResult.average;
+    let corrects = 0;
 
     const prismaRequest = await Promise.all(
       request.messages.map(async (message: Message) => {
@@ -56,6 +57,7 @@ export default async function handler(
         if (answerChecker?.correct_answer === message.answer) {
           isAnswerCorrect = true;
           correctAnswers = correctAnswers + 1;
+          corrects = corrects + 1;
         } else {
           isAnswerCorrect = false;
         }
@@ -74,6 +76,7 @@ export default async function handler(
     });
 
     topicResult.average = correctAnswers;
+    topicResult.correctNum = corrects;
 
     const updateTopicResult = await prisma.topicResult.update({
       where: { id: topicResult.id },

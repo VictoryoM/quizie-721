@@ -9,9 +9,19 @@ import {
   Stack,
   Text,
   Box,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  useDisclosure,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  CloseButton,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 export default function Quiz({
   questions,
@@ -21,7 +31,13 @@ export default function Quiz({
   // console.log(value);
 
   const [answers, setAnswers] = useState<{ id: number; answer: string }[]>([]);
+  const [errorAlert, setErrorAlert] = useState('');
   console.log(answers);
+  const {
+    isOpen: isVisible,
+    onClose,
+    onOpen,
+  } = useDisclosure({ defaultIsOpen: false });
 
   const submitHandler = async () => {
     console.log(answers);
@@ -32,10 +48,19 @@ export default function Quiz({
       },
       body: JSON.stringify({ messages: answers }),
     });
-    const { average, attemptNum }: TopicResult = await response.json();
+    const { average, attemptNum, correctNum }: TopicResult =
+      await response.json();
+    console.log(correctNum);
     console.log(average);
     const percentage = (average / (attemptNum * 10)) * 100;
     console.log(`${percentage}%`);
+    if (response.status === 400 || response.status === 500) {
+      setErrorAlert('Please answer all the questions');
+      onOpen();
+    } else if (response.status === 401) {
+      setErrorAlert('Please Sign In to take the quiz');
+      onOpen();
+    }
 
     // setAnswers([]);
   };
@@ -54,12 +79,13 @@ export default function Quiz({
           return q;
         }
       });
-
+      onClose();
       setAnswers(updatedAnswers);
     } else {
       // If the question is not answered, add the new answer
       const newAnswer = { id: answer.questionId, answer: answer.pickedAnswer };
       setAnswers([...answers, newAnswer]);
+      onClose();
     }
   };
 
@@ -75,9 +101,15 @@ export default function Quiz({
         <TabPanels>
           {questions.map((question, index) => (
             <TabPanel key={index}>
-              <Box mx={['5%', 'auto']} w={['90%', '70%']} mt={10}
-              boxShadow='xl' p='6' rounded='md'>
-                <Text fontSize={['md', 'lg']} fontWeight="bold">
+              <Box
+                mx={['5%', 'auto']}
+                w={['90%', '70%']}
+                mt={10}
+                boxShadow='xl'
+                p='6'
+                rounded='md'
+              >
+                <Text fontSize={['md', 'lg']} fontWeight='bold'>
                   {question.question}
                 </Text>
                 <RadioGroup onChange={setValue} mt={4}>
@@ -96,18 +128,31 @@ export default function Quiz({
                   </Stack>
                 </RadioGroup>
               </Box>
-
-
             </TabPanel>
           ))}
         </TabPanels>
       </Tabs>
-      <Center>
-        <Button onClick={submitHandler} mt={8} w="20%" colorScheme="green" >
+      <Center flexDirection={'column'}>
+        {isVisible && (
+          <Alert status={'error'}>
+            <AlertIcon />
+            <Box>
+              <AlertTitle>Error!</AlertTitle>
+              <AlertDescription>{errorAlert}</AlertDescription>
+            </Box>
+            <CloseButton
+              alignSelf='flex-start'
+              position='relative'
+              right={-1}
+              top={-1}
+              onClick={onClose}
+            />
+          </Alert>
+        )}
+        <Button onClick={submitHandler} mt={8} w='20%' colorScheme='green'>
           Submit
         </Button>
       </Center>
-
     </>
 
   );

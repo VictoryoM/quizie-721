@@ -75,7 +75,8 @@ export default function Quiz({
         <TabPanels>
           {questions.map((question, index) => (
             <TabPanel key={index}>
-              <Box mx={['5%', 'auto']} w={['90%', '70%']} mt={10}>
+              <Box mx={['5%', 'auto']} w={['90%', '70%']} mt={10}
+              boxShadow='xl' p='6' rounded='md'>
                 <Text fontSize={['md', 'lg']} fontWeight="bold">
                   {question.question}
                 </Text>

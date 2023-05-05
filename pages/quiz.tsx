@@ -32,6 +32,19 @@ export default function Quiz({
 
   const [answers, setAnswers] = useState<{ id: number; answer: string }[]>([]);
   const [errorAlert, setErrorAlert] = useState('');
+
+
+  const [activeTab, setActiveTab] = useState(0);
+  const handlePrev = () => {
+    setActiveTab(Math.max(activeTab - 1, 0));
+  };
+
+  const handleNext = () => {
+    setActiveTab(Math.min(activeTab + 1, questions.length - 1));
+  };
+
+
+
   console.log(answers);
   const {
     isOpen: isVisible,
@@ -90,69 +103,84 @@ export default function Quiz({
   };
 
   return (
+
     <>
-      <Tabs variant={'soft-rounded'} colorScheme='green' isFitted my={10}>
-        <TabList>
-          {questions.map((question, index) => (
-            <Tab key={index}>{`Q ${index + 1}`}</Tab>
-          ))}
-        </TabList>
-        <TabPanels>
-          {questions.map((question, index) => (
-            <TabPanel key={index}>
-              <Box
-                mx={['5%', 'auto']}
-                w={['90%', '70%']}
-                mt={10}
-                boxShadow='xl'
-                p='6'
-                rounded='md'
-              >
-                <Text fontSize={['md', 'lg']} fontWeight='bold'>
-                  {question.question}
-                </Text>
-                <RadioGroup onChange={setValue} mt={4}>
-                  <Stack spacing={2}>
-                    {question.options.map((option, index) => (
-                      <Radio
-                        key={index}
-                        value={JSON.stringify({
-                          pickedAnswer: option,
-                          questionId: question.id,
-                        })}
-                      >
-                        <Text fontSize={['md', 'lg']}>{option}</Text>
-                      </Radio>
-                    ))}
-                  </Stack>
-                </RadioGroup>
-              </Box>
-            </TabPanel>
-          ))}
-        </TabPanels>
-      </Tabs>
-      <Center flexDirection={'column'}>
-        {isVisible && (
-          <Alert status={'error'}>
-            <AlertIcon />
-            <Box>
-              <AlertTitle>Error!</AlertTitle>
-              <AlertDescription>{errorAlert}</AlertDescription>
+    <Tabs variant={'soft-rounded'} colorScheme='green' isFitted my={10} index={activeTab}>
+      <TabList>
+        {questions.map((question, index) => (
+          <Tab key={index}>{`Q ${index + 1}`}</Tab>
+        ))}
+      </TabList>
+      <TabPanels>
+        {questions.map((question, index) => (
+          <TabPanel key={index}>
+            <Box
+              mx={['5%', 'auto']}
+              w={['90%', '70%']}
+              mt={10}
+              boxShadow='xl'
+              p='6'
+              rounded='md'
+            >
+              <Text fontSize={['md', 'lg']} fontWeight='bold'>
+                {question.question}
+              </Text>
+              <RadioGroup onChange={setValue} mt={4}>
+                <Stack spacing={2}>
+                  {question.options.map((option, index) => (
+                    <Radio
+                      key={index}
+                      value={JSON.stringify({
+                        pickedAnswer: option,
+                        questionId: question.id,
+                      })}
+                    >
+                      <Text fontSize={['md', 'lg']}>{option}</Text>
+                    </Radio>
+                  ))}
+                </Stack>
+              </RadioGroup>
             </Box>
-            <CloseButton
-              alignSelf='flex-start'
-              position='relative'
-              right={-1}
-              top={-1}
-              onClick={onClose}
-            />
-          </Alert>
-        )}
-        <Button onClick={submitHandler} mt={8} w='20%' colorScheme='green'>
-          Submit
+          </TabPanel>
+        ))}
+      </TabPanels>
+    </Tabs>
+    <Center flexDirection={'column'}>
+      {isVisible && (
+        <Alert status={'error'} alignItems="center" justifyContent="center">
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Error!</AlertTitle>
+            <AlertDescription>{errorAlert}</AlertDescription>
+          </Box>
+          <CloseButton
+            alignSelf='flex-start'
+            position='relative'
+            right={-1}
+            top={-1}
+            onClick={onClose}
+          />
+        </Alert>
+      )}
+      <Box mt={8}>
+        <Button onClick={handlePrev} mr={4} isDisabled={activeTab === 0}>
+          Prev
         </Button>
-      </Center>
-    </>
+        <Button onClick={handleNext} ml={4} isDisabled={activeTab === questions.length - 1}>
+          Next
+        </Button>
+        
+      </Box>
+
+   
+          <Button onClick={submitHandler} my={4} colorScheme='green' w={['30%', '20%']}>
+            Submit
+          </Button>
+        
+    </Center>
+  </>
+
+
   );
 }
 

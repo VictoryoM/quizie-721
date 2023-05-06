@@ -30,6 +30,7 @@ export default function Quiz({
 
   const [answers, setAnswers] = useState<{ id: number; answer: string }[]>([]);
   const [errorAlert, setErrorAlert] = useState('');
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   const [activeTab, setActiveTab] = useState(0);
   const handlePrev = () => {
@@ -72,6 +73,7 @@ export default function Quiz({
   };
 
   const submitHandler = async () => {
+    setIsDisabled(true);
     console.log(answers);
     const response = await fetch('/api/quizScore', {
       method: 'POST',
@@ -95,6 +97,7 @@ export default function Quiz({
     }
 
     // setAnswers([]);
+    setIsDisabled(false);
   };
 
   return (
@@ -176,6 +179,8 @@ export default function Quiz({
         </Box>
 
         <Button
+          isLoading={isDisabled}
+          loadingText='Submitting'
           onClick={submitHandler}
           my={4}
           colorScheme='green'

@@ -1,6 +1,8 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GitHubProvider from 'next-auth/providers/github';
+import DiscordProvider from 'next-auth/providers/discord';
+import GoogleProvider from 'next-auth/providers/google';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { prisma } from '@/lib/db/clients';
 
@@ -10,24 +12,32 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(prisma),
   providers: [
-    CredentialsProvider({
-      name: 'Sign In',
-      credentials: {
-        email: {
-          label: 'Email',
-          type: 'email',
-          placeholder: 'email@email.com',
-        },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials) {
-        const user = { id: '1', name: 'Jenny', email: 'test@test.com' };
-        return user;
-      },
-    }),
+    // CredentialsProvider({
+    //   name: 'Sign In',
+    //   credentials: {
+    //     email: {
+    //       label: 'Email',
+    //       type: 'email',
+    //       placeholder: 'email@email.com',
+    //     },
+    //     password: { label: 'Password', type: 'password' },
+    //   },
+    //   async authorize(credentials) {
+    //     const user = { id: '1', name: 'Jenny', email: 'test@test.com' };
+    //     return user;
+    //   },
+    // }),
     GitHubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    DiscordProvider({
+      clientId: process.env.DISCORD_CLIENT_ID!,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET!,
     }),
   ],
 };

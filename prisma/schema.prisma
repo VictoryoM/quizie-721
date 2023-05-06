@@ -52,6 +52,8 @@ model Topic {
   // Track the popularity of the topic based on the number of times it has been done
   timesTaken   Int           @default(0)
   Leaderboard  Leaderboard[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
 }
 
 // Question table to store the actual question and answer choices
@@ -66,6 +68,8 @@ model Question {
   topic          Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
   topicId        Int
   Answer         Answer[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 }
 
 // Answer table to store users' answers to questions
@@ -80,6 +84,7 @@ model Answer {
 
   TopicResult   TopicResult? @relation(fields: [topicResultId], references: [id], onDelete: Cascade)
   topicResultId Int?
+  createdAt     DateTime     @default(now())
 }
 
 // TopicResult table to store users' results for a topic
@@ -93,6 +98,8 @@ model TopicResult {
   correctNum Int      @default(0)
   attemptNum Int      @default(0)
   answers    Answer[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
 }
 
 // Leaderboard table to track scores
@@ -104,6 +111,7 @@ model Leaderboard {
   topicId   Int
   score     Float    @default(0)
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Account {

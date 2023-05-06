@@ -9,6 +9,7 @@ import {
   Stack,
   Tooltip,
 } from '@chakra-ui/react';
+import { Topic } from '@prisma/client';
 import { InferGetServerSidePropsType } from 'next';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -26,34 +27,40 @@ export default function TopicLists(props: any) {
     );
 
   return (
-    <Box maxWidth={'100%'} display="flex" justifyContent={['center']} flexWrap="wrap">
-  {topics.map((topic: any, index: number) => (
-    <Tooltip
-      key={topic.id}
-      label={topic.level}
-      aria-label={topic.titleTopic}
+    <Box
+      maxWidth={'100%'}
+      display='flex'
+      justifyContent={['center']}
+      flexWrap='wrap'
     >
-      <Link
-        href={{
-          pathname: '/quiz',
-          query: {
-            titleTopic: `${topic.titleTopic}`,
-            level: `${topic.level}`,
-          },
-        }}
-      >
-        <Button
-          colorScheme={['red', 'blue', 'green', 'purple', 'pink'][index % 5]} 
-          variant='outline'
-          my={[1, 2]}
-          mx={[1, 2]}
+      {topics.map((topic: Topic, index: number) => (
+        <Tooltip
+          key={topic.id}
+          label={topic.level}
+          aria-label={topic.titleTopic}
         >
-          {topic.titleTopic}
-        </Button>
-      </Link>
-    </Tooltip>
-  ))}
-</Box>
-
+          <Link
+            href={{
+              pathname: '/quiz',
+              query: {
+                titleTopic: `${topic.titleTopic}`,
+                level: `${topic.level}`,
+              },
+            }}
+          >
+            <Button
+              colorScheme={
+                ['red', 'blue', 'green', 'purple', 'pink'][index % 5]
+              }
+              variant='outline'
+              my={[1, 2]}
+              mx={[1, 2]}
+            >
+              {topic.titleTopic}
+            </Button>
+          </Link>
+        </Tooltip>
+      ))}
+    </Box>
   );
 }

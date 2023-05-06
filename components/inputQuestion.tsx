@@ -18,6 +18,7 @@ import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
 export default function InputQuestion() {
   const [value, setValue] = useState<string>('');
   const [level, setLevel] = useState<string>('Easy');
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -25,6 +26,7 @@ export default function InputQuestion() {
   }, []);
 
   const handleSender = async () => {
+    setIsDisabled(true);
     const questionAsked = {
       topic: `${value}`,
       questions: `${level}`,
@@ -38,6 +40,7 @@ export default function InputQuestion() {
     });
     setValue('');
     setLevel('Easy');
+    setIsDisabled(false);
   };
   // const handlerRefresh = () => {
   //   inputRef.current?.focus();
@@ -84,7 +87,12 @@ export default function InputQuestion() {
             query: { titleTopic: `${value}`, level: `${level}` },
           }}
         > */}
-        <Button colorScheme='yellow' onClick={handleSender}>
+        <Button
+          isLoading={isDisabled}
+          loadingText='Sending'
+          colorScheme='yellow'
+          onClick={handleSender}
+        >
           Send
         </Button>
         {/* </Link> */}

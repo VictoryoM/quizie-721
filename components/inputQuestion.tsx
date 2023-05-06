@@ -15,16 +15,9 @@ import {
 import Link from 'next/link';
 import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
 
-interface Conversation {
-  role: string;
-  content: string;
-}
-
 export default function InputQuestion() {
   const [value, setValue] = useState<string>('');
   const [level, setLevel] = useState<string>('Easy');
-  // const [conversation, setConversation] = useState<Conversation[]>([]);
-  // const [questionAns, setQuestionAns] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {

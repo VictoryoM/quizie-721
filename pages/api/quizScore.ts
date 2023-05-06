@@ -24,6 +24,10 @@ export default async function handler(
 
     const answerTopicId = <number>request.messages[0].id;
     // console.log(answerTopicId);
+    await prisma.topic.update({
+      where: { id: answerTopicId },
+      data: { timesTaken: { increment: 1 } },
+    });
     const findQuest = await prisma.question.findUnique({
       where: { id: answerTopicId },
     });

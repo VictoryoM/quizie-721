@@ -28,6 +28,7 @@ export default function UserSignIn(props: any) {
             minW={0}
           >
             <Avatar
+              referrerPolicy='no-referrer'
               size={'sm'}
               src={
                 user.image
@@ -41,6 +42,7 @@ export default function UserSignIn(props: any) {
             <Center>
               <Avatar
                 size={'2xl'}
+                referrerPolicy='no-referrer'
                 src={
                   user.image
                     ? `${user.image}}`

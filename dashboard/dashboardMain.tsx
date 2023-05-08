@@ -34,7 +34,7 @@ function StatsCard(props: StatsCardProps) {
     );
 }
 
-export default function BasicStatistics() {
+export default function DashboardStatistics() {
 
     return (
         <>
@@ -44,7 +44,7 @@ export default function BasicStatistics() {
                 fontSize={'4xl'}
                 py={10}
                 fontWeight={'bold'}>
-                How well are you doing?
+               Dashboard
             </chakra.h1>
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
                 <StatsCard title={'Overall score'} stat={'60%'} />
@@ -55,7 +55,7 @@ export default function BasicStatistics() {
            
 
         </Box>
-        <QuizScorePage />
+        
         </>
     );
 }

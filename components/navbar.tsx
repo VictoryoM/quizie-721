@@ -294,4 +294,8 @@ const NAV_ITEMS: Array<NavItem> = [
     label: 'Scoreboard',
     href: '/scoreboard',
   },
+  {
+    label: 'Dashboard',
+    href: '/dashboard',
+  },
 ];

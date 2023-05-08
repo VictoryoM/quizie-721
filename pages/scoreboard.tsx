@@ -27,7 +27,7 @@ function StatsCard(props: StatsCardProps) {
             py={'5'}
             shadow={'xl'}
             border={'1px solid'}
-            borderColor={useColorModeValue('gray.800', 'gray.500')}
+            borderColor={useColorModeValue('gray.400', 'gray.500')}
             rounded={'lg'}>
             <StatLabel fontWeight={'medium'} isTruncated>
                 {title}
@@ -54,7 +54,7 @@ export default function BasicStatistics() {
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
                 <StatsCard title={'Overall score'} stat={'60%'} />
                 <StatsCard title={'Attempted quizzes'} stat={'30'} />
-                <StatsCard title={'Previous quiz score'} stat={'100%'} />
+                <StatsCard title={'Previous quiz score'} stat={'80%'} />
             </SimpleGrid>
 
            

@@ -77,12 +77,14 @@ export default function Navbar() {
             fontFamily={'heading'}
             color={useColorModeValue('gray.800', 'white')}
             style={{ textDecoration: 'none' }}
+            fontWeight={800}
+            fontSize={['xl', '2xl']}
             href='/'
           >
             Quizie
           </Link>
 
-          <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
+          <Flex display={{ base: 'none', md: 'flex' }} ml={10} mt={[0, 2]}>
             <DesktopNav />
           </Flex>
         </Flex>

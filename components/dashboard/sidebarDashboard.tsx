@@ -30,13 +30,14 @@ import { ReactText } from 'react';
 interface LinkItemProps {
   name: string;
   icon: IconType;
+  path: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Home', icon: FiHome },
-  { name: 'Trending Topics', icon: FiTrendingUp },
-  { name: 'Remove Topics', icon: FiCompass },
-  { name: 'Ban Topics', icon: FiStar },
-  { name: 'Settings', icon: FiSettings },
+  { name: 'Home', icon: FiHome, path: '/dashboard'},
+  { name: 'Trending Topics', icon: FiTrendingUp, path: '/dashboard/trending-topics'},
+  { name: 'Remove Topics', icon: FiCompass, path: '/dashboard/remove-topics' },
+  { name: 'Ban Topics', icon: FiStar, path: '/dashboard/ban-topics'},
+  { name: 'Settings', icon: FiSettings, path: '/dashboard/settings' },
 ];
 
 export default function SimpleSidebar({ children }: { children?: ReactNode }) {
@@ -89,7 +90,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{base: 'block', md:'none' }} onClick={onClose} />
       </Box>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem key={link.name} icon={link.icon} path={link.path}>
           {link.name}
         </NavItem>
       ))}
@@ -100,10 +101,11 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 interface NavItemProps extends FlexProps {
   icon: IconType;
   children: ReactText;
+  path: string;
 }
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, children, path, ...rest }: NavItemProps) => {
   return (
-    <Link href={'#'} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Link href={path} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
         align="center"
         p="4"

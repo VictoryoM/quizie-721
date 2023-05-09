@@ -7,6 +7,7 @@ import {
     StatNumber,
     useColorModeValue,
     Flex,
+    Center,
 } from '@chakra-ui/react';
 import LineChart from '@/components/dashboard/LineChart';
 import BarChart from '@/components/dashboard/BarChart';
@@ -54,17 +55,36 @@ export default function HomeStatistics() {
                     <StatsCard title={'Previous quiz score'} stat={'80%'} />
                 </SimpleGrid>
             </Box>
-            <Flex
-                    flexDirection={{ base: "column", md: "row" }}
-                    justifyContent="space-between"
-                >
-                    <Box mt={10} w={{base:"full", md:"500px"}} mx="auto">
-                        <LineChart />
-                    </Box>
-                    <Box mt={10} w={{base:"full", md:"500px"}} mx="auto">
-                        <BarChart />
-                    </Box>
-                </Flex>
+            <Center>
+                <Box w={["60%", "90%", "100%"]}
+                my={10}>
+                    <Flex
+                        flexDirection={{ base: "column", md: "row" }}
+                        justifyContent="space-between"
+                    >
+                        <Box
+                            shadow={'xl'}
+                            border={'1px solid'}
+                            borderColor={useColorModeValue('gray.400', 'gray.500')}
+                            rounded={'lg'}
+                            mt={10}
+                            w={{ base: "full", md: "500px" }}
+                            mx="auto">
+                            <LineChart />
+                        </Box>
+                        <Box shadow={'xl'}
+                            border={'1px solid'}
+                            borderColor={useColorModeValue('gray.400', 'gray.500')}
+                            rounded={'lg'}
+                            mt={10}
+                            w={{ base: "full", md: "500px" }}
+                            mx="auto">
+                            <BarChart />
+                        </Box>
+                    </Flex>
+                </Box>
+            </Center>
+
         </>
     );
 }

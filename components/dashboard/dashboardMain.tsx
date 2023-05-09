@@ -7,7 +7,7 @@ import {
     StatNumber,
     useColorModeValue,
 } from '@chakra-ui/react';
-import QuizScorePage from '../components/QuizScorePage';
+
 
 
 interface StatsCardProps {
@@ -38,24 +38,24 @@ export default function DashboardStatistics() {
 
     return (
         <>
-        <Box maxW="7xl" mx={'auto'} pt={5} px={{ base: 2, sm: 12, md: 17 }}>
-            <chakra.h1
-                textAlign={'center'}
-                fontSize={'4xl'}
-                py={10}
-                fontWeight={'bold'}>
-               Dashboard
-            </chakra.h1>
-            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
-                <StatsCard title={'Overall score'} stat={'60%'} />
-                <StatsCard title={'Attempted quizzes'} stat={'30'} />
-                <StatsCard title={'Previous quiz score'} stat={'80%'} />
-            </SimpleGrid>
+            <Box maxW="7xl" mx={'auto'} pt={5} px={{ base: 2, sm: 12, md: 17 }}>
+                <chakra.h1
+                    textAlign={'center'}
+                    fontSize={'4xl'}
+                    py={10}
+                    fontWeight={'bold'}>
+                    Home
+                </chakra.h1>
+                <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
+                    <StatsCard title={'Overall score'} stat={'60%'} />
+                    <StatsCard title={'Attempted quizzes'} stat={'30'} />
+                    <StatsCard title={'Previous quiz score'} stat={'80%'} />
+                </SimpleGrid>
 
-           
 
-        </Box>
-        
+
+            </Box>
+
         </>
     );
 }

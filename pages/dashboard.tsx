@@ -1,14 +1,16 @@
 import React from 'react'
-import SimpleSidebar from '../dashboard/sidebarDashboard';
-import DashboardStatistics from '../dashboard/dashboardMain'
+import SimpleSidebar from '../components/dashboard/sidebarDashboard';
+import DashboardStatistics from '../components/dashboard/dashboardMain'
+import Charts from '@/components/dashboard/Charts';
 
 const dashboard = () => {
     return (
         <>
-        <SimpleSidebar>
-            <DashboardStatistics />
-        </SimpleSidebar>
-           
+            <SimpleSidebar>
+                <DashboardStatistics />
+                {/* <Charts/> */}
+            </SimpleSidebar>
+
         </>
 
     )

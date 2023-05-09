@@ -80,7 +80,12 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       pos="fixed"
       h="full"
       {...rest}>
-      
+      <Box display="flex" alignItems="center" justifyContent="space-between" p="4">
+        <Text fontSize="xl" fontWeight="bold">
+          Dashboard
+        </Text>
+        <CloseButton display={{base: 'block', md:'none' }} onClick={onClose} />
+      </Box>
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon}>
           {link.name}
@@ -148,7 +153,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       />
 
       <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-        Logo
+        Dashboard
       </Text>
     </Flex>
   );

@@ -56,7 +56,7 @@ export default function HomeStatistics() {
                 </SimpleGrid>
             </Box>
             <Center>
-                <Box w={["60%", "90%", "100%"]}
+                <Box w={["100%", "90%", "80%"]}
                 my={10}>
                     <Flex
                         flexDirection={{ base: "column", md: "row" }}

@@ -1,50 +1,65 @@
-import { ApexOptions } from 'apexcharts';
-import dynamic from 'next/dynamic';
 import React from 'react';
-import Chart from 'react-apexcharts';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { Box } from '@chakra-ui/react';
+// import faker from 'faker';
 
-export type LineChartProps = {
-  data: {
-    name: string,
-    data: number[] | null[],
-  }[],
-  options: ApexOptions & { chart: { type: "line" | undefined } };
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'bottom' as const,
+    },
+    title: {
+      display: true,
+      text: 'Some Data',
+    },
+  },
 };
 
-type LineChartState = {
-  chartData: {
-    name: string,
-    data: number[] | null[],
-  }[],
-  chartOptions: ApexOptions;
+const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+export const data = {
+  labels,
+  datasets: [
+    {
+      label: 'Dataset 1',
+      // data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
+      data: labels.map(() => Math.floor(Math.random() * 1000)),
+      borderColor: 'rgb(255, 99, 132)',
+      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+    },
+    {
+      label: 'Dataset 2',
+      // data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
+      data: labels.map(() => Math.floor(Math.random() * 1000)),
+      borderColor: 'rgb(53, 162, 235)',
+      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+    },
+  ],
 };
 
-class LineChart extends React.Component<LineChartProps, LineChartState> {
-  state: LineChartState = {
-    chartData: [],
-    chartOptions: {},
-  };
-
-  componentDidMount() {
-    const { data, options } = this.props;
-    const chartData = data.map(({ name, data }) => ({ name, data }));
-    this.setState({
-      chartData,
-      chartOptions: options,
-    });
-  }
-
-  render() {
-    return (
-      <Chart
-        options={this.state.chartOptions}
-        series={this.state.chartData}
-        type="line"
-        width="100%"
-        height="300"
-      />
-    );
-  }
+function LineChart() {
+  return <Line options={options} data={data} />
 }
 
 export default LineChart;

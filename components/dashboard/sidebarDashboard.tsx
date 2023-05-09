@@ -22,6 +22,8 @@ import {
   FiSettings,
   FiMenu,
 } from 'react-icons/fi';
+
+
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
 
@@ -31,9 +33,9 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Home', icon: FiHome },
-  { name: 'Trending', icon: FiTrendingUp },
-  { name: 'Explore', icon: FiCompass },
-  { name: 'Favourites', icon: FiStar },
+  { name: 'Trending Topics', icon: FiTrendingUp },
+  { name: 'Remove Topics', icon: FiCompass },
+  { name: 'Ban Topics', icon: FiStar },
   { name: 'Settings', icon: FiSettings },
 ];
 
@@ -101,7 +103,7 @@ interface NavItemProps extends FlexProps {
 }
 const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   return (
-    <Link href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Link href={'#'} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
         align="center"
         p="4"

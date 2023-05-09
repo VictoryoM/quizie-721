@@ -6,8 +6,10 @@ import {
     StatLabel,
     StatNumber,
     useColorModeValue,
+    Flex,
 } from '@chakra-ui/react';
-
+import LineChart from '@/components/dashboard/LineChart';
+import BarChart from '@/components/dashboard/BarChart';
 
 
 interface StatsCardProps {
@@ -34,7 +36,7 @@ function StatsCard(props: StatsCardProps) {
     );
 }
 
-export default function DashboardStatistics() {
+export default function HomeStatistics() {
 
     return (
         <>
@@ -51,11 +53,18 @@ export default function DashboardStatistics() {
                     <StatsCard title={'Attempted quizzes'} stat={'30'} />
                     <StatsCard title={'Previous quiz score'} stat={'80%'} />
                 </SimpleGrid>
-
-
-
             </Box>
-
+            <Flex
+                    flexDirection={{ base: "column", md: "row" }}
+                    justifyContent="space-between"
+                >
+                    <Box mt={10} w={{base:"full", md:"500px"}} mx="auto">
+                        <LineChart />
+                    </Box>
+                    <Box mt={10} w={{base:"full", md:"500px"}} mx="auto">
+                        <BarChart />
+                    </Box>
+                </Flex>
         </>
     );
 }

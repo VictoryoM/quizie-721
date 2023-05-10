@@ -9,13 +9,24 @@ import RemoveTopic from '@/components/dashboard/RemoveTopic';
 const dashboard = () => {
     return (
         <>
-            <SimpleSidebar>
-                <HomeStatistics />
-                <TrendingTopics />
-                <RemoveTopic />
-                <BanTopics />
-                <Settings />
-            </SimpleSidebar>
+           <SimpleSidebar>
+      <div id="home">
+        <HomeStatistics />
+      </div>
+      <div id="trending-topics">
+        <TrendingTopics />
+      </div>
+      <div id="remove-topics">
+        <RemoveTopic />
+      </div>
+      <div id="ban-topics">
+        <BanTopics />
+      </div>
+      <div id="settings">
+        <Settings />
+      </div>
+     
+    </SimpleSidebar>
 
         </>
 

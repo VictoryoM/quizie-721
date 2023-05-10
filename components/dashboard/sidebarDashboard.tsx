@@ -22,22 +22,23 @@ import {
   FiSettings,
   FiMenu,
 } from 'react-icons/fi';
-
-
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
+import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
+
 
 interface LinkItemProps {
   name: string;
   icon: IconType;
-  path: string;
+  path: string; 
+  section: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Home', icon: FiHome, path: '/dashboard'},
-  { name: 'Trending Topics', icon: FiTrendingUp, path: '/dashboard/trending-topics'},
-  { name: 'Remove Topics', icon: FiCompass, path: '/dashboard/remove-topics' },
-  { name: 'Ban Topics', icon: FiStar, path: '/dashboard/ban-topics'},
-  { name: 'Settings', icon: FiSettings, path: '/dashboard/settings' },
+  { name: 'Home', icon: FiHome, path: '/dashboard', section: 'home'},
+  { name: 'Trending Topics', icon: FiTrendingUp, path: '/dashboard/trending-topics', section: 'trending-topics'},
+  { name: 'Remove Topics', icon: FiCompass, path: '/dashboard/remove-topics', section: 'remove-topics' },
+  { name: 'Ban Topics', icon: FiStar, path: '/dashboard/ban-topics', section: 'ban-topics'},
+  { name: 'Settings', icon: FiSettings, path: '/dashboard/settings', section: 'settings' },
 ];
 
 export default function SimpleSidebar({ children }: { children?: ReactNode }) {
@@ -90,7 +91,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{base: 'block', md:'none' }} onClick={onClose} />
       </Box>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} path={link.path}>
+        <NavItem key={link.name} icon={link.icon} path={link.path} section={link.section}>
           {link.name}
         </NavItem>
       ))}
@@ -102,10 +103,11 @@ interface NavItemProps extends FlexProps {
   icon: IconType;
   children: ReactText;
   path: string;
+  section: string;
 }
-const NavItem = ({ icon, children, path, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, children, path, section, ...rest }: NavItemProps) => {
   return (
-    <Link href={path} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+   <ScrollLink to={section} spy={true} smooth={true} offset={-50}>
       <Flex
         align="center"
         p="4"
@@ -130,7 +132,7 @@ const NavItem = ({ icon, children, path, ...rest }: NavItemProps) => {
         )}
         {children}
       </Flex>
-    </Link>
+    </ScrollLink>
   );
 };
 
@@ -140,6 +142,11 @@ interface MobileProps extends FlexProps {
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
+      position="fixed" // add this line
+      top={12} // add this line
+      left={0} // add this line
+      right={0} // add this line
+      zIndex="999"
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 24 }}
       height="20"

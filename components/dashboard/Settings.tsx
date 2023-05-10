@@ -1,8 +1,15 @@
+import { Box, Heading } from '@chakra-ui/react'
 import React from 'react'
 
 const Settings = () => {
   return (
-    <div>Settings</div>
+    <div>
+    <Box mb={'40'}>
+      <Heading textAlign={'center'}>
+        Settings
+      </Heading>
+    </Box>
+  </div>
   )
 }
 

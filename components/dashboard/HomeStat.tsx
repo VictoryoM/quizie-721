@@ -59,7 +59,7 @@ export default function HomeStatistics() {
                 <Box w={["100%", "90%", "80%"]}
                 my={10}>
                     <Flex
-                        flexDirection={{ base: "column", md: "row" }}
+                        flexDirection={{ base: "column", md: "column" , lg: "row"}}
                         justifyContent="space-between"
                     >
                         <Box

@@ -27,7 +27,8 @@ export default function QuizScoreList(props: QuizScoreListProps) {
     return (
         <SimpleGrid columns={{ base: 1, md: 1 }} spacing={8} mb={8}>
             <Center>
-                <List spacing={3} w='80%' maxW={'750px'} overflowY={'scroll'} maxH={'400px'}>
+                <List spacing={3} w='80%' maxW={'750px'} overflowY={'scroll'} maxH={'400px'}
+                style={{ scrollbarWidth: 'none', overflow: '-moz-scrollbars-none', msOverflowStyle: 'none' } as React.CSSProperties}>
                     {quizScores.map((quizScore) => (
                         <ListItem
                             key={quizScore.title}

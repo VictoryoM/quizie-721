@@ -14,7 +14,7 @@ const TrendingTopics = () => {
 
   return (
     <div>
-    <Box mb={'40'}>
+    <Box mb={'20'}>
       <Heading textAlign={'center'} mb={'4'}>
         Trending Topics
       </Heading>

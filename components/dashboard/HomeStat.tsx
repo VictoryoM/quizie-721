@@ -40,7 +40,7 @@ function StatsCard(props: StatsCardProps) {
 export default function HomeStatistics() {
 
     return (
-        <>
+        <Box mb={20}>
             <Box maxW="7xl" mx={'auto'} pt={5} px={{ base: 2, sm: 12, md: 17 }}>
                 <chakra.h1
                     textAlign={'center'}
@@ -85,6 +85,6 @@ export default function HomeStatistics() {
                 </Box>
             </Center>
 
-        </>
+        </Box>
     );
 }

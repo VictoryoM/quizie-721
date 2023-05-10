@@ -27,7 +27,7 @@ export default function QuizScoreList(props: QuizScoreListProps) {
     return (
         <SimpleGrid columns={{ base: 1, md: 1 }} spacing={8} mb={8}>
             <Center>
-                <List spacing={3} w='80%' maxW={'750px'}>
+                <List spacing={3} w='80%' maxW={'750px'} overflowY={'scroll'} maxH={'400px'}>
                     {quizScores.map((quizScore) => (
                         <ListItem
                             key={quizScore.title}
@@ -42,7 +42,7 @@ export default function QuizScoreList(props: QuizScoreListProps) {
                                 {quizScore.title}
                             </Box>
                             <Stat textAlign={'right'}>
-                                <StatLabel>Score</StatLabel>
+                                <StatLabel>Amount</StatLabel>
                                 <StatNumber>{quizScore.score}</StatNumber>
                             </Stat>
                         </ListItem>

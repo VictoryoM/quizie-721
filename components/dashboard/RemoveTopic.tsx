@@ -8,6 +8,9 @@ const RemoveTopic = () => {
       <Heading textAlign={'center'}>
         Remove Topics
       </Heading>
+      <Box>
+        
+      </Box>
     </Box>
   </div>
   )

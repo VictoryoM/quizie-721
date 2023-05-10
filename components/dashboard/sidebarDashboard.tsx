@@ -30,15 +30,14 @@ import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
 interface LinkItemProps {
   name: string;
   icon: IconType;
-  path: string; 
   section: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Home', icon: FiHome, path: '/dashboard', section: 'home'},
-  { name: 'Trending Topics', icon: FiTrendingUp, path: '/dashboard/trending-topics', section: 'trending-topics'},
-  { name: 'Remove Topics', icon: FiCompass, path: '/dashboard/remove-topics', section: 'remove-topics' },
-  { name: 'Ban Topics', icon: FiStar, path: '/dashboard/ban-topics', section: 'ban-topics'},
-  { name: 'Settings', icon: FiSettings, path: '/dashboard/settings', section: 'settings' },
+  { name: 'Home', icon: FiHome, section: 'home'},
+  { name: 'Trending Topics', icon: FiTrendingUp, section: 'trending-topics'},
+  { name: 'Remove Topics', icon: FiCompass, section: 'remove-topics' },
+  { name: 'Ban Topics', icon: FiStar, section: 'ban-topics'},
+  { name: 'Settings', icon: FiSettings, section: 'settings' },
 ];
 
 export default function SimpleSidebar({ children }: { children?: ReactNode }) {
@@ -91,7 +90,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{base: 'block', md:'none' }} onClick={onClose} />
       </Box>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} path={link.path} section={link.section}>
+        <NavItem key={link.name} icon={link.icon} section={link.section}>
           {link.name}
         </NavItem>
       ))}
@@ -102,10 +101,9 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 interface NavItemProps extends FlexProps {
   icon: IconType;
   children: ReactText;
-  path: string;
   section: string;
 }
-const NavItem = ({ icon, children, path, section, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, children, section, ...rest }: NavItemProps) => {
   return (
    <ScrollLink to={section} spy={true} smooth={true} offset={-50}>
       <Flex
@@ -142,10 +140,10 @@ interface MobileProps extends FlexProps {
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
-      position="fixed" // add this line
-      top={12} // add this line
-      left={0} // add this line
-      right={0} // add this line
+      position="fixed" 
+      top={12} 
+      left={0} 
+      right={0}
       zIndex="999"
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 24 }}

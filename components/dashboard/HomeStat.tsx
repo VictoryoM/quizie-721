@@ -50,9 +50,9 @@ export default function HomeStatistics() {
                     Home
                 </chakra.h1>
                 <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
-                    <StatsCard title={'Overall score'} stat={'60%'} />
-                    <StatsCard title={'Attempted quizzes'} stat={'30'} />
-                    <StatsCard title={'Previous quiz score'} stat={'80%'} />
+                    <StatsCard title={'Overall Users'} stat={'150'} />
+                    <StatsCard title={'Todays Users'} stat={'30'} />
+                    <StatsCard title={'Number of Quizzes taken'} stat={'6969'} />
                 </SimpleGrid>
             </Box>
             <Center>

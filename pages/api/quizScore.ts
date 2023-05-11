@@ -88,6 +88,22 @@ export default async function handler(
       data: topicResult,
     });
 
+    let leaderboardUser = await prisma.leaderboard.findFirst({
+      where: { userId: prismaUser!.id, topicId: findQuest?.topicId },
+    });
+
+    if (leaderboardUser === null) {
+      leaderboardUser = await prisma.leaderboard.create({
+        data: {
+          userId: prismaUser!.id,
+          topicId: findQuest?.topicId!,
+          score: 1,
+        },
+      });
+    } else {
+      leaderboardUser.score += 1;
+    }
+
     res.status(200).json(topicResult);
   } catch (error) {
     console.log(error);

@@ -7,7 +7,7 @@ import {
   Stack,
   Collapse,
   Icon,
-  Link,
+  // Link,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -33,6 +33,7 @@ import {
 } from '@chakra-ui/icons';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import UserSignIn from './signinButton';
+import Link from 'next/link';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -72,16 +73,18 @@ export default function Navbar() {
           maxW='1250px'
           mx='auto'
         >
-          <Link
-            textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-            fontFamily={'heading'}
-            color={useColorModeValue('gray.800', 'white')}
-            style={{ textDecoration: 'none' }}
-            fontWeight={800}
-            fontSize={['xl', '2xl']}
-            href='/'
-          >
-            Quizie
+          <Link href='/'>
+            <Box
+              mt={{ base: 0, md: 1.5 }}
+              textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
+              fontFamily={'heading'}
+              fontWeight={800}
+              fontSize={['xl', '2xl']}
+              color={useColorModeValue('gray.800', 'white')}
+              style={{ textDecoration: 'none' }}
+            >
+              Quizie
+            </Box>
           </Link>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10} mt={[0, 2]}>
@@ -124,18 +127,19 @@ const DesktopNav = () => {
         <Box key={navItem.label}>
           <Popover trigger={'hover'} placement={'bottom-start'}>
             <PopoverTrigger>
-              <Link
-                p={2}
-                href={navItem.href ?? '#'}
-                fontSize={'sm'}
-                fontWeight={500}
-                color={linkColor}
-                _hover={{
-                  textDecoration: 'none',
-                  color: linkHoverColor,
-                }}
-              >
-                {navItem.label}
+              <Link href={navItem.href ?? '/'}>
+                <Box
+                  p={2}
+                  fontSize={'sm'}
+                  fontWeight={500}
+                  color={linkColor}
+                  _hover={{
+                    textDecoration: 'none',
+                    color: linkHoverColor,
+                  }}
+                >
+                  {navItem.label}
+                </Box>
               </Link>
             </PopoverTrigger>
 
@@ -164,37 +168,38 @@ const DesktopNav = () => {
 
 const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   return (
-    <Link
-      href={href}
-      role={'group'}
-      display={'block'}
-      p={2}
-      rounded={'md'}
-      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}
-    >
-      <Stack direction={'row'} align={'center'}>
-        <Box>
-          <Text
+    <Link href={href!}>
+      <Box
+        role={'group'}
+        display={'block'}
+        p={2}
+        rounded={'md'}
+        _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}
+      >
+        <Stack direction={'row'} align={'center'}>
+          <Box>
+            <Text
+              transition={'all .3s ease'}
+              _groupHover={{ color: 'pink.400' }}
+              fontWeight={500}
+            >
+              {label}
+            </Text>
+            <Text fontSize={'sm'}>{subLabel}</Text>
+          </Box>
+          <Flex
             transition={'all .3s ease'}
-            _groupHover={{ color: 'pink.400' }}
-            fontWeight={500}
+            transform={'translateX(-10px)'}
+            opacity={0}
+            _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
+            justify={'flex-end'}
+            align={'center'}
+            flex={1}
           >
-            {label}
-          </Text>
-          <Text fontSize={'sm'}>{subLabel}</Text>
-        </Box>
-        <Flex
-          transition={'all .3s ease'}
-          transform={'translateX(-10px)'}
-          opacity={0}
-          _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
-          justify={'flex-end'}
-          align={'center'}
-          flex={1}
-        >
-          <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
-        </Flex>
-      </Stack>
+            <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
+          </Flex>
+        </Stack>
+      </Box>
     </Link>
   );
 };
@@ -256,8 +261,8 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         >
           {children &&
             children.map((child) => (
-              <Link key={child.label} py={2} href={child.href}>
-                {child.label}
+              <Link key={child.label} href={child.href!}>
+                <Box py={2}>{child.label}</Box>
               </Link>
             ))}
         </Stack>

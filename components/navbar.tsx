@@ -78,7 +78,8 @@ export default function Navbar() {
               mt={{ base: 0, md: 1.5 }}
               textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
               fontFamily={'heading'}
-              fontWeight={'bold'}
+              fontWeight={800}
+              fontSize={['xl', '2xl']}
               color={useColorModeValue('gray.800', 'white')}
               style={{ textDecoration: 'none' }}
             >
@@ -86,7 +87,7 @@ export default function Navbar() {
             </Box>
           </Link>
 
-          <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
+          <Flex display={{ base: 'none', md: 'flex' }} ml={10} mt={[0, 2]}>
             <DesktopNav />
           </Flex>
         </Flex>
@@ -278,23 +279,28 @@ interface NavItem {
 }
 
 const NAV_ITEMS: Array<NavItem> = [
+  // {
+  //   label: 'Inspiration',
+  //   children: [
+  //     {
+  //       label: 'Explore Design Work',
+  //       subLabel: 'Trending Design to inspire you',
+  //       href: '#',
+  //     },
+  //     {
+  //       label: 'New & Noteworthy',
+  //       subLabel: 'Up-and-coming Designers',
+  //       href: '#',
+  //     },
+  //   ],
+  // },
+
   {
-    label: 'Inspiration',
-    children: [
-      {
-        label: 'Explore Design Work',
-        subLabel: 'Trending Design to inspire you',
-        href: '/',
-      },
-      {
-        label: 'New & Noteworthy',
-        subLabel: 'Up-and-coming Designers',
-        href: '/',
-      },
-    ],
+    label: 'Scoreboard',
+    href: '/scoreboard',
   },
   {
-    label: 'Learn Design',
-    href: '/',
+    label: 'Dashboard',
+    href: '/dashboard',
   },
 ];

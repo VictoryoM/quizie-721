@@ -34,6 +34,17 @@ export default function Home({ topics }: any) {
 
 export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
+  const roleCheck = await prisma.role.findFirst({
+    where: {
+      users: {
+        some: {
+          email: session?.user?.email,
+        },
+      },
+    },
+  });
+  console.log(roleCheck);
+  console.log(`sadasdsad ${roleCheck?.name} saddad`);
   const topics = await prisma.topic.findMany();
 
   return {

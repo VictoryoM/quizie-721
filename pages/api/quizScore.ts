@@ -101,7 +101,10 @@ export default async function handler(
         },
       });
     } else {
-      leaderboardUser.score += 1;
+      await prisma.leaderboard.update({
+        where: { id: leaderboardUser.id },
+        data: { score: leaderboardUser.score + 1 },
+      });
     }
 
     res.status(200).json(topicResult);

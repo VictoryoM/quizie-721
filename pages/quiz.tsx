@@ -74,7 +74,7 @@ export default function Quiz({
 
   const submitHandler = async () => {
     setIsDisabled(true);
-    console.log(answers);
+    // console.log(answers);
     const response = await fetch('/api/quizScore', {
       method: 'POST',
       headers: {

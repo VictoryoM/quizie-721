@@ -9,6 +9,7 @@ import { authOptions } from './api/auth/[...nextauth]';
 import { prisma } from '@/lib/db/clients';
 import TopicLists from '@/components/topicList';
 import { Center, Divider } from '@chakra-ui/react';
+import TrendingTopics from '@/components/dashboard/TrendingTopics';
 
 export default function Home({ topics }: any) {
   // const { data: session } = useSession();
@@ -28,23 +29,13 @@ export default function Home({ topics }: any) {
         <Divider orientation='vertical' />
       </Center>
       <TopicLists topics={topics} />
+      <TrendingTopics />
     </>
   );
 }
 
 export async function getServerSideProps(context: any) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const roleCheck = await prisma.role.findFirst({
-    where: {
-      users: {
-        some: {
-          email: session?.user?.email,
-        },
-      },
-    },
-  });
-  console.log(roleCheck);
-  console.log(`sadasdsad ${roleCheck?.name} saddad`);
   const topics = await prisma.topic.findMany();
 
   return {

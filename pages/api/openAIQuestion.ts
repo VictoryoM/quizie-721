@@ -37,7 +37,7 @@ export default async function handler(
   if (!session) return res.status(401).json({ message: 'Unauthorized' });
   try {
     console.log(req.body);
-    const topic = req.body.messages.topic;
+    const topicReq = req.body.messages.topic;
     const level = req.body.messages.questions;
     const prismaUser = await prisma.user.findUnique({
       where: { email: session.user?.email! },
@@ -45,9 +45,15 @@ export default async function handler(
     if (!prismaUser) {
       res.status(401).json({ message: 'Unauthorized' });
     }
-    if (!topic || topic === '' || topic.length < 3) {
-      res.status(401).json({ message: 'Topic is required' });
+    if (!topicReq || topicReq === '' || topicReq.length < 3) {
+      res.status(400).json({ message: 'Topic is required' });
     }
+
+    const words = topicReq.toLowerCase().split(' ');
+    const capitalizedWords = words.map(
+      (word: String) => word.charAt(0).toUpperCase() + word.slice(1)
+    );
+    const topic = capitalizedWords.join(' ');
 
     let createQuiz = await prisma.topic.findFirst({
       where: {
@@ -57,6 +63,15 @@ export default async function handler(
       },
     });
     if (!createQuiz && topic.length >= 3 && level.length !== 0) {
+      //check if it is a banned topic
+      const bannedTopic = await prisma.bannedTopic.findFirst({
+        where: {
+          topicBanned: topic,
+        },
+      });
+      if (bannedTopic) {
+        res.status(400).json({ message: 'Topic is banned' });
+      }
       createQuiz = await prisma.topic.create({
         data: {
           titleTopic: topic,
@@ -64,6 +79,29 @@ export default async function handler(
           quizMasterId: prismaUser!.id,
         },
       });
+      const roleCheck = await prisma.role.findFirst({
+        where: {
+          users: {
+            some: {
+              email: prismaUser?.email,
+            },
+          },
+        },
+      });
+      if (!roleCheck) {
+        const assignRole = await prisma.role.update({
+          where: {
+            name: 'QuizAdmin',
+          },
+          data: {
+            users: {
+              connect: {
+                id: prismaUser!.id,
+              },
+            },
+          },
+        });
+      }
       const findQuestions = await prisma.question.findMany({
         where: {
           topicId: createQuiz.id,

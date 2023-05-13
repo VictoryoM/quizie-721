@@ -28,16 +28,15 @@ export default async function handler(
       where: { id: answerTopicId },
     });
 
-    await prisma.topic.update({
-      where: { id: findQuest?.topicId },
-      data: { timesTaken: { increment: 1 } },
-    });
-
     let topicResult = await prisma.topicResult.findFirst({
       where: { userId: prismaUser!.id, topicId: findQuest?.topicId },
     });
 
     if (topicResult === null) {
+      await prisma.topic.update({
+        where: { id: findQuest?.topicId },
+        data: { timesTaken: { increment: 1 } },
+      });
       topicResult = await prisma.topicResult.create({
         data: {
           userId: prismaUser!.id,

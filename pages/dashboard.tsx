@@ -41,15 +41,24 @@ export default function Dashboard({
         {/* <div id='trending-topics'>
           <TrendingTopics />
         </div> */}
-        <Box id='remove-topics' display={role === 'Admin' ? 'block' : 'none'}>
-          <RemoveTopic topics={topics} users={findUser} />
-        </Box>
-        <Box id='ban-topics' display={role === 'Admin' ? 'block' : 'none'}>
-          <BanTopics banTopic={bannedTopics} />
-        </Box>
-        <Box id='settings'>
-          <Settings />
-        </Box>
+        {role === 'QuizAdmin' || 'Admin' ? (
+          <Box id='remove-topics'>
+            <RemoveTopic topics={topics} users={findUser} />
+          </Box>
+        ) : null}
+        {role === 'Admin' ? (
+          // <Box id='remove-topics' display={role === 'Admin' ? 'block' : 'none'}>
+          //   <RemoveTopic topics={topics} users={findUser} />
+          // </Box>
+          <Box>
+            <Box id='ban-topics' display={role === 'Admin' ? 'block' : 'none'}>
+              <BanTopics banTopic={bannedTopics} />
+            </Box>
+            <Box id='settings'>
+              <Settings />
+            </Box>
+          </Box>
+        ) : null}
       </SimpleSidebar>
     </>
   );

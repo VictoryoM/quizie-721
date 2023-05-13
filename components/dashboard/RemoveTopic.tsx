@@ -10,11 +10,13 @@ import {
   InputLeftElement,
   Flex,
   useColorModeValue,
+  Button,
 } from '@chakra-ui/react';
 import { DeleteIcon, SearchIcon } from '@chakra-ui/icons';
 import React, { useState } from 'react';
 import { Topic, User } from '@prisma/client';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 interface Topics {
   topics: Topic[];
@@ -67,6 +69,16 @@ export default function RemoveTopic(props: Topics) {
               onChange={handleSearch}
             />
           </InputGroup>
+          {topics.length === 0 && (
+            <Box textAlign='center'>
+              <Text mt={4} fontStyle={'italic'} fontSize={'xl'}>
+                No topics found
+              </Text>
+              <Link href={'/'}>
+                <Button mt={4}>Create New</Button>
+              </Link>
+            </Box>
+          )}
           <List
             mt={4}
             spacing={5}

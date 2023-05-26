@@ -26,6 +26,7 @@ export default async function handler(
     // console.log(answerTopicId);
     const findQuest = await prisma.question.findUnique({
       where: { id: answerTopicId },
+      select: { topicId: true, topic: { select: { level: true } } },
     });
 
     let topicResult = await prisma.topicResult.findFirst({
@@ -89,20 +90,36 @@ export default async function handler(
 
     let leaderboardUser = await prisma.leaderboard.findFirst({
       where: { userId: prismaUser!.id, topicId: findQuest?.topicId },
+      select: { score: true, id: true },
     });
+
+    // const leaderboardScore = leaderboardUser?.score
+    //   ? leaderboardUser.score + corrects
+    //   : corrects;
+    let leaderboardScorePrev = leaderboardUser?.score || 0;
+    let leaderboardScore = 0;
+    if (findQuest?.topic.level === 'Easy') {
+      leaderboardScore = leaderboardScorePrev + corrects * 1;
+    } else if (findQuest?.topic.level === 'Medium') {
+      leaderboardScore = leaderboardScorePrev + corrects * 2;
+    } else if (findQuest?.topic.level === 'Hard') {
+      leaderboardScore = leaderboardScorePrev + corrects * 3;
+    } else {
+      leaderboardScore = corrects * 1;
+    }
 
     if (leaderboardUser === null) {
       leaderboardUser = await prisma.leaderboard.create({
         data: {
           userId: prismaUser!.id,
           topicId: findQuest?.topicId!,
-          score: 1,
+          score: leaderboardScore,
         },
       });
     } else {
       await prisma.leaderboard.update({
         where: { id: leaderboardUser.id },
-        data: { score: leaderboardUser.score + 1 },
+        data: { score: leaderboardScore },
       });
     }
 
@@ -112,3 +129,37 @@ export default async function handler(
     res.status(500).json({ error: 'An error occurred.' });
   }
 }
+
+// let leaderboardUser = await prisma.leaderboard.findFirst({
+//   where: { userId: prismaUser!.id, topicId: findQuest?.topicId },
+//   select: { score: true, id: true },
+// });
+// // const leaderboardScore = leaderboardUser?.score
+// //   ? leaderboardUser.score + corrects
+// //   : corrects;
+// let leaderboardScorePrev = leaderboardUser?.score || 0;
+// let leaderboardScore = 1;
+// // if (findQuest?.topic.level === 'easy') {
+// //   leaderboardScore = leaderboardScorePrev + corrects * 1;
+// // } else if (findQuest?.topic.level === 'medium') {
+// //   leaderboardScore = leaderboardScorePrev + corrects * 2;
+// // } else if (findQuest?.topic.level === 'hard') {
+// //   leaderboardScore = leaderboardScorePrev + corrects * 3;
+// // } else {
+// //   leaderboardScore = corrects * 1;
+// // }
+
+// if (leaderboardUser === null) {
+//   const leaderboardUser = await prisma.leaderboard.create({
+//     data: {
+//       userId: prismaUser!.id,
+//       topicId: findQuest?.topicId!,
+//       score: leaderboardScore,
+//     },
+//   });
+// } else {
+//   await prisma.leaderboard.update({
+//     where: { id: leaderboardUser.id },
+//     data: { score: leaderboardScore },
+//   });
+// }

@@ -45,6 +45,7 @@ export default function TopicLists(props: any) {
               query: {
                 titleTopic: `${topic.titleTopic}`,
                 level: `${topic.level}`,
+                id: topic.id,
               },
             }}
           >

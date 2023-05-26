@@ -196,6 +196,7 @@ export default function Quiz({
 export async function getServerSideProps(titleTopic: any) {
   const topic = titleTopic.query.titleTopic;
   const level = titleTopic.query.level;
+  const id = titleTopic.query.id;
   if (!topic || !level) {
     return {
       notFound: true,
@@ -203,6 +204,7 @@ export async function getServerSideProps(titleTopic: any) {
   }
   const findTopicId = await prisma.topic.findFirst({
     where: {
+      id: parseInt(id),
       titleTopic: topic,
       level: level,
     },

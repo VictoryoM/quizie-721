@@ -122,7 +122,8 @@ export default async function handler(
           model: 'gpt-3.5-turbo',
           messages: openAiData,
         });
-        res.status(200).json({ result: question.data });
+        res.status(200).json('Success Create Topic');
+        // res.status(200).json({ result: question.data });
         const replies = question.data.choices[0].message?.content;
         let questions: Question[] = [];
 
@@ -154,7 +155,8 @@ export default async function handler(
           model: 'gpt-3.5-turbo',
           messages: openAiData,
         });
-        res.status(200).json({ result: question.data });
+        res.status(200).json('Topic has existed and Success Create Question');
+        // res.status(200).json({ result: question.data });
         const replies = question.data.choices[0].message?.content;
         let questions: Question[] = [];
 
@@ -164,7 +166,8 @@ export default async function handler(
           addQuestion(questions, topicId);
         }
       } else if (findQuestions.length === 10) {
-        res.status(200).json({ result: findQuestions });
+        res.status(200).json('Topic has existed in your database');
+        // res.status(200).json({ result: findQuestions });
         // console.log(`\n\nVICTORYO\n\n${JSON.stringify(findQuestions)}\n\n}`);
       }
     }

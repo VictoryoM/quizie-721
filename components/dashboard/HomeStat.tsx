@@ -11,6 +11,8 @@ import {
 } from '@chakra-ui/react';
 import LineChart from '@/components/dashboard/LineChart';
 import BarChart from '@/components/dashboard/BarChart';
+import { QuizMaster } from '@/models/dashboard';
+import { useSession } from 'next-auth/react';
 
 interface StatsCardProps {
   title: string;
@@ -38,23 +40,57 @@ function StatsCard(props: StatsCardProps) {
 }
 interface Stats {
   role: string;
-  topicsTakenUser: number;
-  scoreUser: number;
-  numberOfUsers: number;
-  todaysUsers: number;
-  topicsTakenOverall: number;
-  topicsAttemptUser: number;
+  topics: QuizMaster[];
 }
 export default function HomeStatistics(props: Stats) {
-  const {
-    role,
-    numberOfUsers,
-    todaysUsers,
-    topicsTakenOverall,
-    topicsTakenUser,
-    scoreUser,
-    topicsAttemptUser,
-  } = props;
+  const { role, topics } = props;
+  let numberOfUsers = 0;
+  let todaysUsers = 0;
+  let topicsTakenOverall = 0;
+  let topicsTakenUser = 0;
+  let scoreUser = 0;
+  let topicsAttemptUser = 0;
+
+  if (role === 'Admin') {
+    const { data: session } = useSession();
+    //filter data match user name from session
+    const findUser = topics.filter((user) => user.name === session?.user?.name);
+    todaysUsers = topics.filter((user) => {
+      const today = new Date();
+      const date = new Date(user.createdAt);
+      return (
+        date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear()
+      );
+    }).length;
+
+    topics.forEach((topic) => {
+      topic.topics.forEach((topic) => {
+        topicsTakenOverall += topic.timesTaken;
+      });
+    });
+    numberOfUsers += topics.length;
+    findUser.forEach((user) => {
+      user.topicResults.forEach((topic) => {
+        topicsAttemptUser += topic.attemptNum;
+        scoreUser += topic.average;
+      });
+      topicsTakenUser += user.topicResults.length;
+    });
+  } else {
+    topics.forEach((user) => {
+      user.topicResults.forEach((topic) => {
+        topicsAttemptUser += topic.attemptNum;
+        scoreUser += topic.average;
+      });
+      topicsTakenUser += user.topicResults.length;
+    });
+  }
+  // topics.forEach((topic) => {
+  //   topicsTakenUser += topic.topicResults.length;
+  // });
+
   return (
     <Box mb={20}>
       <Box maxW='7xl' mx={'auto'} pt={5} px={{ base: 2, sm: 12, md: 17 }}>
@@ -78,7 +114,7 @@ export default function HomeStatistics(props: Stats) {
               />
               <StatsCard title={'Todays Users'} stat={todaysUsers.toString()} />
               <StatsCard
-                title={'Number of Quizzes taken'}
+                title={'Overall Quizzes taken'}
                 stat={topicsTakenOverall.toString()}
               />
             </SimpleGrid>

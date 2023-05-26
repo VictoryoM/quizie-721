@@ -11,6 +11,7 @@ import QuizScorePage, { LeaderScorePage } from '../components/QuizScorePage';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/db/clients';
 import { authOptions } from './api/auth/[...nextauth]';
+import { GetServerSidePropsContext } from 'next';
 
 interface StatsCardProps {
   title: string;
@@ -61,7 +62,7 @@ export default function BasicStatistics() {
   );
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const topics = await prisma.topic.findMany();
   // const topics = await prisma.topic.findMany();

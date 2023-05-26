@@ -7,7 +7,6 @@ import {
   Stack,
   Collapse,
   Icon,
-  // Link,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -31,12 +30,10 @@ import {
   MoonIcon,
   SunIcon,
 } from '@chakra-ui/icons';
-import { useSession, signIn, signOut } from 'next-auth/react';
 import UserSignIn from './signinButton';
 import Link from 'next/link';
 
 export default function Navbar() {
-  const { data: session } = useSession();
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onToggle } = useDisclosure();
 
@@ -101,11 +98,7 @@ export default function Navbar() {
           <Button onClick={toggleColorMode}>
             {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
           </Button>
-          <UserSignIn
-            user={session?.user}
-            onSignIn={signIn}
-            onSignOut={signOut}
-          />
+          <UserSignIn />
         </Stack>
       </Flex>
 

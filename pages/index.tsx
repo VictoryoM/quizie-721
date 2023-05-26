@@ -9,6 +9,8 @@ import { authOptions } from './api/auth/[...nextauth]';
 import { prisma } from '@/lib/db/clients';
 import TopicLists from '@/components/topicList';
 import { Center, Divider } from '@chakra-ui/react';
+import TrendingTopics from '@/components/dashboard/TrendingTopics';
+import { GetServerSidePropsContext } from 'next';
 
 export default function Home({ topics }: any) {
   // const { data: session } = useSession();
@@ -28,11 +30,12 @@ export default function Home({ topics }: any) {
         <Divider orientation='vertical' />
       </Center>
       <TopicLists topics={topics} />
+      <TrendingTopics />
     </>
   );
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const topics = await prisma.topic.findMany();
 

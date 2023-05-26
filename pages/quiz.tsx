@@ -99,6 +99,7 @@ export default function Quiz({
     // setAnswers([]);
     setIsDisabled(false);
   };
+ 
 
   return (
     <>
@@ -111,7 +112,7 @@ export default function Quiz({
       >
         <TabList>
           {quests.map((question, index) => (
-            <Tab key={index}>{`Q ${index + 1}`}</Tab>
+            <Tab key={index} onClick={()=> setActiveTab(index)}>{`Q ${index + 1}`}</Tab>
           ))}
         </TabList>
         <TabPanels>
@@ -185,6 +186,7 @@ export default function Quiz({
           my={4}
           colorScheme='green'
           w={['30%', '20%']}
+          isDisabled={answers.length !== questions.length}
         >
           Submit
         </Button>

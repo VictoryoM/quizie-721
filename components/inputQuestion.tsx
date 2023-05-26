@@ -1,4 +1,4 @@
-import { QuestionIcon } from '@chakra-ui/icons';
+import { QuestionIcon, AddIcon } from '@chakra-ui/icons';
 import {
   Stack,
   InputGroup,
@@ -11,6 +11,14 @@ import {
   Radio,
   RadioGroup,
   Flex,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -48,49 +56,62 @@ export default function InputQuestion() {
     setIsDisabled(false);
   };
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   return (
-    <Center mt={'10'}>
-      <Stack w='40%' spacing={4}>
-        <InputGroup>
-          <InputLeftElement
-            pointerEvents='none'
-            children={<QuestionIcon color='red.300' />}
-          />
-          <Input
-            type='text'
-            placeholder='Topic'
-            value={value}
-            onChange={handleInput}
-            // onKeyDown={handleKeyDown}
-          />
-        </InputGroup>
-        <Center>
-          <Box p='4'>
-            <RadioGroup onChange={setLevel} value={level}>
-              <Stack direction='row'>
-                <Radio value='Easy'>Easy</Radio>
-                <Radio value='Medium'>Medium</Radio>
-                <Radio value='Hard'>Hard</Radio>
+    <Box>
+      <Center mt={10}>
+        <Button leftIcon={<AddIcon/>} colorScheme='green' onClick={onOpen}>Create New Topic</Button>
+      </Center>
+      <Modal isOpen={isOpen} onClose={onClose} size={'xl'}>
+        <ModalOverlay 
+         bg='blackAlpha.300'
+         backdropFilter='blur(10px) hue-rotate(270deg)' />
+        <ModalContent>
+          <ModalHeader textAlign={'center'}>Create a new Topic!!</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Center my={'10'}>
+              <Stack w='40%' spacing={4}>
+                <InputGroup>
+                  <InputLeftElement
+                    pointerEvents='none'
+                    children={<QuestionIcon color='red.300' />}
+                  />
+                  <Input
+                    type='text'
+                    placeholder='Topic'
+                    value={value}
+                    onChange={handleInput}
+                  />
+                </InputGroup>
+                <Center>
+                  <Box p='4'>
+                    <RadioGroup onChange={setLevel} value={level}>
+                      <Stack direction='row'>
+                        <Radio value='Easy'>Easy</Radio>
+                        <Radio value='Medium'>Medium</Radio>
+                        <Radio value='Hard'>Hard</Radio>
+                      </Stack>
+                    </RadioGroup>
+                  </Box>
+                </Center>
+                <Button
+                  isLoading={isDisabled}
+                  loadingText='Sending'
+                  colorScheme='yellow'
+                  onClick={handleSender}
+                >
+                  Send
+                </Button>
               </Stack>
-            </RadioGroup>
-          </Box>
-        </Center>
-        {/* <Link
-          href={{
-            pathname: '/trial',
-            query: { titleTopic: `${value}`, level: `${level}` },
-          }}
-        > */}
-        <Button
-          isLoading={isDisabled}
-          loadingText='Sending'
-          colorScheme='yellow'
-          onClick={handleSender}
-        >
-          Send
-        </Button>
-        {/* </Link> */}
-      </Stack>
-    </Center>
+            </Center>
+
+          </ModalBody>
+
+
+        </ModalContent>
+      </Modal>
+    </Box>
   );
 }

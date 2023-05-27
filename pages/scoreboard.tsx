@@ -12,6 +12,7 @@ import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/db/clients';
 import { authOptions } from './api/auth/[...nextauth]';
 import { GetServerSidePropsContext } from 'next';
+import { TopicResult } from '@prisma/client';
 
 interface StatsCardProps {
   title: string;
@@ -38,7 +39,20 @@ function StatsCard(props: StatsCardProps) {
   );
 }
 
-export default function BasicStatistics() {
+interface LeaderB {
+  score: number;
+  user: {
+    name: string;
+  };
+}
+
+interface Props {
+  leaderboard: LeaderB[];
+  topicBoard: TopicResult[];
+}
+
+export default function BasicStatistics(props: Props) {
+  const { leaderboard, topicBoard } = props;
   return (
     <>
       <Box maxW='7xl' mx={'auto'} pt={5} px={{ base: 2, sm: 12, md: 17 }}>
@@ -53,7 +67,10 @@ export default function BasicStatistics() {
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
           <StatsCard title={'Overall score'} stat={'60%'} />
           <StatsCard title={'Attempted quizzes'} stat={'30'} />
-          <StatsCard title={'Previous quiz score'} stat={'80%'} />
+          <StatsCard
+            title={'Previous quiz score'}
+            stat={`${topicBoard[0].correctNum * 10}%`}
+          />
         </SimpleGrid>
       </Box>
       <LeaderScorePage />
@@ -64,7 +81,38 @@ export default function BasicStatistics() {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const topics = await prisma.topic.findMany();
+  // const topics = await prisma.topic.findMany();
+  const leaderboard = await prisma.leaderboard.findMany({
+    orderBy: {
+      score: 'desc',
+    },
+    select: {
+      score: true,
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+  const topicBoard = await prisma.topicResult.findMany({
+    where: {
+      user: {
+        email: session?.user?.email,
+      },
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+    select: {
+      average: true,
+      attemptNum: true,
+      correctNum: true,
+    },
+  });
+  console.log(leaderboard);
+  console.log(topicBoard);
+
   // const topics = await prisma.topic.findMany();
   // //take 5 trending topics from topics
   // const trendingTopics = topics.sort((a, b) => {
@@ -76,7 +124,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       session,
-      topics: JSON.parse(JSON.stringify(topics)),
+      topicBoard,
+      leaderboard,
     },
   };
 }

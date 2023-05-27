@@ -36,7 +36,14 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Settings', icon: FiSettings, section: 'settings', display: 'block' },
 ];
 
-export default function SimpleSidebar({ children }: { children?: ReactNode }) {
+export default function SimpleSidebar({
+  children,
+  role,
+}: {
+  children?: ReactNode;
+  role?: string;
+}) {
+  console.log(children);
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH='100vh' bg={useColorModeValue('gray.50', 'gray.900')}>

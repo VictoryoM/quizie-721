@@ -1,18 +1,21 @@
 import InputQuestion from '@/components/inputQuestion';
-import Questions from '@/components/questionsList';
-import UserSignIn from '@/components/signinButton';
 import Head from 'next/head';
-import Trial from './quiz';
-import { useSession, signIn, signOut } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
 import { prisma } from '@/lib/db/clients';
 import TopicLists from '@/components/topicList';
-import { Center, Divider } from '@chakra-ui/react';
+import { Center, Divider, Flex } from '@chakra-ui/react';
 import TrendingTopics from '@/components/dashboard/TrendingTopics';
 import { GetServerSidePropsContext } from 'next';
+import { Topic } from '@prisma/client';
 
-export default function Home({ topics }: any) {
+interface Props {
+  topics: Topic[];
+}
+
+export default function Home(props: Props) {
+  const { topics } = props;
+  console.log(topics);
   // const { data: session } = useSession();
   // console.log(topics);
   return (
@@ -29,20 +32,37 @@ export default function Home({ topics }: any) {
       <Center m={[2, 3]} height='50px'>
         <Divider orientation='vertical' />
       </Center>
-      <TopicLists topics={topics} />
-      <TrendingTopics />
+      <Flex direction={'column'} gap={6}>
+        <TopicLists topics={topics} />
+        <TrendingTopics topics={topics} />
+      </Flex>
     </>
   );
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const topics = await prisma.topic.findMany();
+  const topics = await prisma.topic.findMany({
+    orderBy: {
+      timesTaken: 'desc',
+    },
+    select: {
+      titleTopic: true,
+      timesTaken: true,
+      id: true,
+      level: true,
+      quizMaster: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
 
   return {
     props: {
       session,
-      topics: JSON.parse(JSON.stringify(topics)),
+      topics,
     },
   };
 }

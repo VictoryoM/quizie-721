@@ -1,18 +1,6 @@
-import { prisma } from '@/lib/db/clients';
-import {
-  Box,
-  Button,
-  Center,
-  Heading,
-  ListItem,
-  OrderedList,
-  Stack,
-  Tooltip,
-} from '@chakra-ui/react';
+import { Box, Button, Center, Heading, Tooltip } from '@chakra-ui/react';
 import { Topic } from '@prisma/client';
-import { InferGetServerSidePropsType } from 'next';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 export default function TopicLists(props: any) {
   const { topics } = props;

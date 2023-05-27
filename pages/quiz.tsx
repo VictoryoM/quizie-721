@@ -20,8 +20,16 @@ import {
   AlertIcon,
   AlertTitle,
   CloseButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { GiTrophyCup } from 'react-icons/gi';
 import { useRouter } from 'next/router';
 
 export default function Quiz({
@@ -34,6 +42,19 @@ export default function Quiz({
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   const [activeTab, setActiveTab] = useState(0);
+
+  // modal open and close useDisclosure
+  const router = useRouter();
+  const { isOpen: isScoreModalOpen, onOpen: scoreModalOpen, onClose: scoreModalClose } = useDisclosure()
+  const [correctScore, setCorrectScore] = useState<number>(0);
+  const [avgScore, setAvgScore] = useState<number>(0);
+  const [percentage, setPercentage] = useState<number>(0);
+  const handleModalClose = () => {
+    scoreModalClose();
+    router.push('/');
+  };
+
+
   const handlePrev = () => {
     setActiveTab(Math.max(activeTab - 1, 0));
   };
@@ -86,9 +107,17 @@ export default function Quiz({
     const { average, attemptNum, correctNum }: TopicResult =
       await response.json();
     console.log(correctNum);
+    setCorrectScore(correctNum);
     console.log(average);
-    const percentage = (average / (attemptNum * 10)) * 100;
+    setAvgScore(average);
+    const percentage = ((average / (attemptNum * 10)) * 100).toFixed(2);
     console.log(`${percentage}%`);
+    setPercentage(percentage);
+
+    //open the scoreModal
+    scoreModalOpen();
+
+
     if (response.status === 400 || response.status === 500) {
       setErrorAlert('Please answer all the questions');
       onOpen();
@@ -191,7 +220,28 @@ export default function Quiz({
         >
           Submit
         </Button>
+       
       </Center>
+      <Modal isOpen={isScoreModalOpen} onClose={scoreModalClose}>
+        <ModalOverlay
+         bg='blackAlpha.300'
+         backdropFilter='blur(10px) hue-rotate(270deg)'
+        />
+        <ModalContent>
+          <ModalHeader> <GiTrophyCup color='orange'/>Your Score!!!</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text fontSize={'lg'}>Correct Answers : {correctScore}</Text>
+            <Text fontSize={'lg'}>Average For Quiz : {avgScore}</Text>
+            <Text fontSize={'lg'}>Percentage For Quiz : {percentage}%</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='green' mr={3} onClick={handleModalClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

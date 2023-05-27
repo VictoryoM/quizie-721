@@ -73,7 +73,7 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, role, ...rest }: SidebarProps & { role: string }) => {
-  const filteredLinkItems = role === 'admin' ? LinkItems : LinkItems.filter(item => item.section === 'settings' || item.section === 'home');
+  const filteredLinkItems = role === 'Admin' ? LinkItems : LinkItems.filter(item => item.section === 'settings' || item.section === 'home');
 
   return (
     <Box

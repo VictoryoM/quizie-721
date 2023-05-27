@@ -22,6 +22,7 @@ import {
   CloseButton,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Quiz({
   questions,

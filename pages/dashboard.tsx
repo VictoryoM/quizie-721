@@ -18,7 +18,7 @@ export default function Dashboard({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
-      <SimpleSidebar>
+      <SimpleSidebar role={role}>
         <Box id='home'>
           <HomeStatistics role={role || 'Normal User'} topics={findUser} />
         </Box>

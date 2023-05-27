@@ -36,20 +36,14 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Settings', icon: FiSettings, section: 'settings', display: 'block' },
 ];
 
-export default function SimpleSidebar({
-  children,
-  role,
-}: {
-  children?: ReactNode;
-  role?: string;
-}) {
-  console.log(children);
+export default function SimpleSidebar({ children, role, }: { children?: ReactNode; role:string }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH='100vh' bg={useColorModeValue('gray.50', 'gray.900')}>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: 'none', md: 'block' }}
+        role= {role}
       />
       <Drawer
         autoFocus={false}
@@ -61,7 +55,7 @@ export default function SimpleSidebar({
         size='full'
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent onClose={onClose} role={role}/>
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
@@ -75,9 +69,12 @@ export default function SimpleSidebar({
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
+  role: string;
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+const SidebarContent = ({ onClose, role, ...rest }: SidebarProps & { role: string }) => {
+  const filteredLinkItems = role === 'admin' ? LinkItems : LinkItems.filter(item => item.section === 'settings' || item.section === 'home');
+
   return (
     <Box
       bg={useColorModeValue('white', 'gray.900')}
@@ -102,7 +99,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           onClick={onClose}
         />
       </Box>
-      {LinkItems.map((link) => (
+      {filteredLinkItems.map((link) => (
         <NavItem
           key={link.name}
           icon={link.icon}
@@ -115,6 +112,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     </Box>
   );
 };
+
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
@@ -159,8 +157,7 @@ interface MobileProps extends FlexProps {
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
-      position='fixed'
-      top={12}
+      
       left={0}
       right={0}
       zIndex='999'

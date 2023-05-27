@@ -20,6 +20,7 @@ export default function TopicLists(props: any) {
       display='flex'
       justifyContent={['center']}
       flexWrap='wrap'
+      mb={10}
     >
       {topics.map((topic: Topic, index: number) => (
         <Tooltip

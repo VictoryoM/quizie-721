@@ -13,7 +13,7 @@ export default function Footer() {
       minHeight="50px"
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
-      zIndex={999}
+      zIndex={998}
       borderTop={"1px solid"}
       borderColor={useColorModeValue("gray.200", "gray.700")}
     >

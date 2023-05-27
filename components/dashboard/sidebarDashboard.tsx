@@ -12,10 +12,12 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
+  Button,
 } from '@chakra-ui/react';
 import { FiHome, FiCompass, FiStar, FiSettings, FiMenu } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
+import { ArrowUpIcon } from '@chakra-ui/icons';
 
 interface LinkItemProps {
   name: string;
@@ -36,14 +38,14 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Settings', icon: FiSettings, section: 'settings', display: 'block' },
 ];
 
-export default function SimpleSidebar({ children, role, }: { children?: ReactNode; role:string }) {
+export default function SimpleSidebar({ children, role, }: { children?: ReactNode; role: string }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH='100vh' bg={useColorModeValue('gray.50', 'gray.900')}>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: 'none', md: 'block' }}
-        role= {role}
+        role={role}
       />
       <Drawer
         autoFocus={false}
@@ -55,7 +57,7 @@ export default function SimpleSidebar({ children, role, }: { children?: ReactNod
         size='full'
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} role={role}/>
+          <SidebarContent onClose={onClose} role={role} />
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
@@ -101,6 +103,7 @@ const SidebarContent = ({ onClose, role, ...rest }: SidebarProps & { role: strin
       </Box>
       {filteredLinkItems.map((link) => (
         <NavItem
+          onClick={onClose}
           key={link.name}
           icon={link.icon}
           section={link.section}
@@ -156,31 +159,44 @@ interface MobileProps extends FlexProps {
 }
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
-    <Flex
-      
-      left={0}
-      right={0}
-      zIndex='999'
-      ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 24 }}
-      height='20'
-      alignItems='center'
-      bg={useColorModeValue('white', 'gray.900')}
-      borderBottomWidth='1px'
-      borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
-      justifyContent='flex-start'
-      {...rest}
-    >
-      <IconButton
-        variant='outline'
-        onClick={onOpen}
-        aria-label='open menu'
-        icon={<FiMenu />}
-      />
+    <>
+      <Flex
+        left={0}
+        right={0}
+        zIndex='999'
+        ml={{ base: 0, md: 60 }}
+        px={{ base: 4, md: 24 }}
+        height='20'
+        alignItems='center'
+        bg={useColorModeValue('white', 'gray.900')}
+        borderBottomWidth='1px'
+        borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+        justifyContent='flex-start'
+        {...rest}
+      >
+        <IconButton
+          variant='outline'
+          onClick={onOpen}
+          aria-label='open menu'
+          icon={<FiMenu />}
+        />
 
-      <Text fontSize='2xl' ml='8' fontFamily='monospace' fontWeight='bold'>
-        Dashboard
-      </Text>
-    </Flex>
+        <Text fontSize='2xl' ml='8' fontFamily='monospace' fontWeight='bold'>
+          Dashboard
+        </Text>
+      </Flex>
+      <Button 
+      position={'fixed'}
+      bottom={'20px'}
+      right={'20px'}
+      zIndex={'999'}
+      bgColor={useColorModeValue('gray.200', 'gray.700')}
+      rounded={'full'}
+      >
+        <ScrollLink to='home' spy={true} smooth={true} offset={-50}>
+          <ArrowUpIcon fontSize={'20px'}/>
+        </ScrollLink>
+      </Button>
+    </>
   );
 };

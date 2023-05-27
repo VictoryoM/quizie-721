@@ -28,7 +28,7 @@ export default function Home(props: Props) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <Box mt={10}>
-        <Heading textAlign='center' as='h1' size='3xl' m={[2, 3]}  >
+        <Heading textAlign='center' as='h1' size='3xl' m={[2, 3]} lineHeight={'tall'} >
           <Highlight
             query='Quizie.'
             styles={{ px: '4', py: '2', rounded: 'full', bg: 'green.300'}}

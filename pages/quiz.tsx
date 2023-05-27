@@ -48,7 +48,7 @@ export default function Quiz({
   const { isOpen: isScoreModalOpen, onOpen: scoreModalOpen, onClose: scoreModalClose } = useDisclosure()
   const [correctScore, setCorrectScore] = useState<number>(0);
   const [avgScore, setAvgScore] = useState<number>(0);
-  const [percentage, setPercentage] = useState<number>(0);
+  const [percentScore, setPercentScore] = useState<number>(0);
   const handleModalClose = () => {
     scoreModalClose();
     router.push('/');
@@ -112,7 +112,7 @@ export default function Quiz({
     setAvgScore(average);
     const percentage = ((average / (attemptNum * 10)) * 100).toFixed(2);
     console.log(`${percentage}%`);
-    setPercentage(percentage);
+    setPercentScore(percentage);
 
     //open the scoreModal
     scoreModalOpen();
@@ -233,7 +233,7 @@ export default function Quiz({
           <ModalBody>
             <Text fontSize={'lg'}>Correct Answers : {correctScore}</Text>
             <Text fontSize={'lg'}>Average For Quiz : {avgScore}</Text>
-            <Text fontSize={'lg'}>Percentage For Quiz : {percentage}%</Text>
+            <Text fontSize={'lg'}>Percentage For Quiz : {percentScore}%</Text>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme='green' mr={3} onClick={handleModalClose}>

@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { Link as ScrollLink } from 'react-scroll';
 
 export default function UserSignIn() {
   const { data: session } = useSession();
@@ -57,7 +58,11 @@ export default function UserSignIn() {
             <MenuItem>
               <Link href={'/dashboard'}>Your Dashboard</Link>
             </MenuItem>
-            <MenuItem>Account Settings</MenuItem>
+            {/* <MenuItem>
+              <Link href={'/dashboard'} >
+                  Account Settings
+              </Link>
+            </MenuItem> */}
             <MenuItem onClick={() => signOut()}>Logout</MenuItem>
           </MenuList>
         </Menu>

@@ -4,10 +4,11 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
 import { prisma } from '@/lib/db/clients';
 import TopicLists from '@/components/topicList';
-import { Center, Divider, Flex } from '@chakra-ui/react';
+import { Center, Divider, Flex, Box, Heading, Highlight } from '@chakra-ui/react';
 import TrendingTopics from '@/components/dashboard/TrendingTopics';
 import { GetServerSidePropsContext } from 'next';
 import { Topic } from '@prisma/client';
+import { color } from 'framer-motion';
 
 interface Props {
   topics: Topic[];
@@ -26,10 +27,23 @@ export default function Home(props: Props) {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <InputQuestion />
+      <Box mt={10}>
+        <Heading textAlign='center' as='h1' size='3xl' m={[2, 3]} lineHeight={'tall'} >
+          <Highlight
+            query='Quizie.'
+            styles={{ px: '4', py: '2', rounded: 'full', bg: 'green.300'}}
+          >
+            Unlock knowledge. Be a Quizie.
+          </Highlight>
+        </Heading>
+
+      </Box>
+      <Box minH={'50vh'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+        <InputQuestion />
+      </Box>
       {/* <Questions /> */}
       {/* <UserSignIn user={session?.user} onSignIn={signIn} onSignOut={signOut} /> */}
-      <Center m={[2, 3]} height='50px'>
+      <Center m={[2, 3]} height='70px'>
         <Divider orientation='vertical' />
       </Center>
       <Flex direction={'column'} gap={6}>

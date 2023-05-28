@@ -56,17 +56,20 @@ export default function InputQuestion() {
     setIsDisabled(false);
   };
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box>
       <Center mt={10}>
-        <Button leftIcon={<AddIcon/>} colorScheme='green' onClick={onOpen}>Create New Topic</Button>
+        <Button leftIcon={<AddIcon />} colorScheme='green' onClick={onOpen}>
+          Create New Topic
+        </Button>
       </Center>
       <Modal isOpen={isOpen} onClose={onClose} size={'xl'}>
-        <ModalOverlay 
-         bg='blackAlpha.300'
-         backdropFilter='blur(10px) hue-rotate(270deg)' />
+        <ModalOverlay
+          bg='blackAlpha.300'
+          backdropFilter='blur(10px) hue-rotate(270deg)'
+        />
         <ModalContent>
           <ModalHeader textAlign={'center'}>Create a new Topic!!</ModalHeader>
           <ModalCloseButton />
@@ -74,10 +77,9 @@ export default function InputQuestion() {
             <Center my={'10'}>
               <Stack w='40%' spacing={4}>
                 <InputGroup>
-                  <InputLeftElement
-                    pointerEvents='none'
-                    children={<QuestionIcon color='red.300' />}
-                  />
+                  <InputLeftElement pointerEvents='none'>
+                    <QuestionIcon color='red.300' />
+                  </InputLeftElement>
                   <Input
                     type='text'
                     placeholder='Topic'
@@ -106,10 +108,7 @@ export default function InputQuestion() {
                 </Button>
               </Stack>
             </Center>
-
           </ModalBody>
-
-
         </ModalContent>
       </Modal>
     </Box>

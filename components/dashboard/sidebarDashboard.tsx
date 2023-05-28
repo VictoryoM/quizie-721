@@ -73,7 +73,6 @@ interface SidebarProps extends BoxProps {
   onClose: () => void;
   role: string;
 }
-
 const SidebarContent = ({ onClose, role, ...rest }: SidebarProps & { role: string }) => {
   const filteredLinkItems = role === 'Admin' ? LinkItems : LinkItems.filter(item => item.section === 'settings' || item.section === 'home');
 
@@ -115,7 +114,6 @@ const SidebarContent = ({ onClose, role, ...rest }: SidebarProps & { role: strin
     </Box>
   );
 };
-
 
 interface NavItemProps extends FlexProps {
   icon: IconType;

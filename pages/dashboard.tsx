@@ -48,7 +48,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     where: {
       users: {
         some: {
-          email: session?.user?.email,
+          email: session?.user?.email || 'none',
         },
       },
     },

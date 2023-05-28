@@ -45,15 +45,18 @@ export default function Quiz({
 
   // modal open and close useDisclosure
   const router = useRouter();
-  const { isOpen: isScoreModalOpen, onOpen: scoreModalOpen, onClose: scoreModalClose } = useDisclosure()
+  const {
+    isOpen: isScoreModalOpen,
+    onOpen: scoreModalOpen,
+    onClose: scoreModalClose,
+  } = useDisclosure();
   const [correctScore, setCorrectScore] = useState<number>(0);
   const [avgScore, setAvgScore] = useState<number>(0);
-  const [percentScore, setPercentScore] = useState<number>(0);
+  const [percentScore, setPercentScore] = useState<string>('');
   const handleModalClose = () => {
     scoreModalClose();
     router.push('/');
   };
-
 
   const handlePrev = () => {
     setActiveTab(Math.max(activeTab - 1, 0));
@@ -117,7 +120,6 @@ export default function Quiz({
     //open the scoreModal
     scoreModalOpen();
 
-
     if (response.status === 400 || response.status === 500) {
       setErrorAlert('Please answer all the questions');
       onOpen();
@@ -129,7 +131,6 @@ export default function Quiz({
     // setAnswers([]);
     setIsDisabled(false);
   };
- 
 
   return (
     <>
@@ -142,7 +143,9 @@ export default function Quiz({
       >
         <TabList>
           {quests.map((question, index) => (
-            <Tab key={index} onClick={()=> setActiveTab(index)}>{`Q ${index + 1}`}</Tab>
+            <Tab key={index} onClick={() => setActiveTab(index)}>{`Q ${
+              index + 1
+            }`}</Tab>
           ))}
         </TabList>
         <TabPanels>
@@ -220,15 +223,18 @@ export default function Quiz({
         >
           Submit
         </Button>
-       
       </Center>
       <Modal isOpen={isScoreModalOpen} onClose={scoreModalClose}>
         <ModalOverlay
-         bg='blackAlpha.300'
-         backdropFilter='blur(10px) hue-rotate(270deg)'
+          bg='blackAlpha.300'
+          backdropFilter='blur(10px) hue-rotate(270deg)'
         />
         <ModalContent>
-          <ModalHeader> <GiTrophyCup color='orange'/>Your Score!!!</ModalHeader>
+          <ModalHeader>
+            {' '}
+            <GiTrophyCup color='orange' />
+            Your Score!!!
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text fontSize={'lg'}>Correct Answers : {correctScore}</Text>

@@ -36,14 +36,20 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Settings', icon: FiSettings, section: 'settings', display: 'block' },
 ];
 
-export default function SimpleSidebar({ children, role, }: { children?: ReactNode; role:string }) {
+export default function SimpleSidebar({
+  children,
+  role,
+}: {
+  children?: ReactNode;
+  role: string;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH='100vh' bg={useColorModeValue('gray.50', 'gray.900')}>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: 'none', md: 'block' }}
-        role= {role}
+        role={role}
       />
       <Drawer
         autoFocus={false}
@@ -55,7 +61,7 @@ export default function SimpleSidebar({ children, role, }: { children?: ReactNod
         size='full'
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} role={role}/>
+          <SidebarContent onClose={onClose} role={role} />
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
@@ -72,8 +78,17 @@ interface SidebarProps extends BoxProps {
   role: string;
 }
 
-const SidebarContent = ({ onClose, role, ...rest }: SidebarProps & { role: string }) => {
-  const filteredLinkItems = role === 'admin' ? LinkItems : LinkItems.filter(item => item.section === 'settings' || item.section === 'home');
+const SidebarContent = ({
+  onClose,
+  role,
+  ...rest
+}: SidebarProps & { role: string }) => {
+  const filteredLinkItems =
+    role === 'admin'
+      ? LinkItems
+      : LinkItems.filter(
+          (item) => item.section === 'settings' || item.section === 'home'
+        );
 
   return (
     <Box
@@ -112,7 +127,6 @@ const SidebarContent = ({ onClose, role, ...rest }: SidebarProps & { role: strin
     </Box>
   );
 };
-
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
@@ -157,7 +171,6 @@ interface MobileProps extends FlexProps {
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
-      
       left={0}
       right={0}
       zIndex='999'

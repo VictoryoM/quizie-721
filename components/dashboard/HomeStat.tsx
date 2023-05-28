@@ -50,9 +50,9 @@ export default function HomeStatistics(props: Stats) {
   let topicsTakenUser = 0;
   let scoreUser = 0;
   let topicsAttemptUser = 0;
+  const { data: session } = useSession();
 
   if (role === 'Admin') {
-    const { data: session } = useSession();
     //filter data match user name from session
     const findUser = topics.filter((user) => user.name === session?.user?.name);
     todaysUsers = topics.filter((user) => {

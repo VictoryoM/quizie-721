@@ -158,10 +158,9 @@ export default function RemovesTopic(props: Topics) {
       <Flex justify='center' mt={8}>
         <Box w={['100%', '80%']} maxW='750px'>
           <InputGroup>
-            <InputLeftElement
-              pointerEvents='none'
-              children={<SearchIcon color='red.300' />}
-            />
+            <InputLeftElement pointerEvents='none'>
+              <SearchIcon color='red.300' />
+            </InputLeftElement>
             <Input
               placeholder='Search topics'
               value={searchTerm}

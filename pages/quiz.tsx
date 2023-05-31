@@ -32,6 +32,13 @@ import { useState } from 'react';
 import { GiTrophyCup } from 'react-icons/gi';
 import { useRouter } from 'next/router';
 
+interface Scores {
+  correctNum: number;
+  average: number;
+  percentScore: string;
+  attemptNum: number;
+}
+
 export default function Quiz({
   questions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -50,9 +57,10 @@ export default function Quiz({
     onOpen: scoreModalOpen,
     onClose: scoreModalClose,
   } = useDisclosure();
-  const [correctScore, setCorrectScore] = useState<number>(0);
-  const [avgScore, setAvgScore] = useState<number>(0);
-  const [percentScore, setPercentScore] = useState<string>('');
+  // const [correctScore, setCorrectScore] = useState<number>(0);
+  // const [avgScore, setAvgScore] = useState<number>(0);
+  // const [percentScore, setPercentScore] = useState<string>('');
+  const [scores, setScores] = useState<Scores>(); // TopicResult
   const handleModalClose = () => {
     scoreModalClose();
     router.push('/');
@@ -109,16 +117,10 @@ export default function Quiz({
     });
     const { average, attemptNum, correctNum }: TopicResult =
       await response.json();
-    console.log(correctNum);
-    setCorrectScore(correctNum);
-    console.log(average);
-    setAvgScore(average);
     const percentage = ((average / (attemptNum * 10)) * 100).toFixed(2);
-    console.log(`${percentage}%`);
-    setPercentScore(percentage);
+    setScores({ correctNum, average, percentScore: percentage, attemptNum });
 
-    //open the scoreModal
-    scoreModalOpen();
+    // scoreModalOpen();
 
     if (response.status === 400 || response.status === 500) {
       setErrorAlert('Please answer all the questions');
@@ -126,6 +128,9 @@ export default function Quiz({
     } else if (response.status === 401) {
       setErrorAlert('Please Sign In to take the quiz');
       onOpen();
+    } else if (response.status < 300) {
+      //open the scoreModal
+      scoreModalOpen();
     }
 
     // setAnswers([]);
@@ -237,9 +242,14 @@ export default function Quiz({
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text fontSize={'lg'}>Correct Answers : {correctScore}</Text>
-            <Text fontSize={'lg'}>Average For Quiz : {avgScore}</Text>
-            <Text fontSize={'lg'}>Percentage For Quiz : {percentScore}%</Text>
+            <Text fontSize={'lg'}>Correct Answers : {scores?.correctNum}</Text>
+            <Text fontSize={'lg'}>
+              Average For Quiz : {scores?.average}/
+              {scores ? scores.attemptNum * 10 : 0}
+            </Text>
+            <Text fontSize={'lg'}>
+              Percentage For Quiz : {scores?.percentScore}%
+            </Text>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme='green' mr={3} onClick={handleModalClose}>

@@ -99,7 +99,7 @@ export default function BasicStatistics(props: Props) {
         )}
       </Box>
       <LeaderScorePage lead={leaderboard} />
-      <QuizScoreList stat={topicBoard} />
+      <QuizScoreList />
     </>
   );
 }

@@ -4,7 +4,14 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
 import { prisma } from '@/lib/db/clients';
 import TopicLists from '@/components/topicList';
-import { Center, Divider, Flex, Box, Heading, Highlight } from '@chakra-ui/react';
+import {
+  Center,
+  Divider,
+  Flex,
+  Box,
+  Heading,
+  Highlight,
+} from '@chakra-ui/react';
 import TrendingTopics from '@/components/dashboard/TrendingTopics';
 import { GetServerSidePropsContext } from 'next';
 import { Topic } from '@prisma/client';
@@ -16,7 +23,6 @@ interface Props {
 
 export default function Home(props: Props) {
   const { topics } = props;
-  console.log(topics);
   // const { data: session } = useSession();
   // console.log(topics);
   return (
@@ -28,17 +34,27 @@ export default function Home(props: Props) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <Box mt={10}>
-        <Heading textAlign='center' as='h1' size='3xl' m={[2, 3]} lineHeight={'tall'} >
+        <Heading
+          textAlign='center'
+          as='h1'
+          size='3xl'
+          m={[2, 3]}
+          lineHeight={'tall'}
+        >
           <Highlight
             query='Quizie.'
-            styles={{ px: '4', py: '2', rounded: 'full', bg: 'green.300'}}
+            styles={{ px: '4', py: '2', rounded: 'full', bg: 'green.300' }}
           >
             Unlock knowledge. Be a Quizie.
           </Highlight>
         </Heading>
-
       </Box>
-      <Box minH={'50vh'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+      <Box
+        minH={'50vh'}
+        display={'flex'}
+        alignItems={'center'}
+        justifyContent={'center'}
+      >
         <InputQuestion />
       </Box>
       {/* <Questions /> */}

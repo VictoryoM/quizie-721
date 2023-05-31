@@ -74,7 +74,7 @@ export default function QuizScoreList() {
                 <Text fontSize={'2xl'} py={10}>
                   You have not attempted any quiz yet!
                 </Text>
-                <Button onClick={() => router.push('/')}>Let's start!</Button>
+                <Button onClick={() => router.push('/')}>Lets start!</Button>
               </Box>
             )}
             {quizScores.map((quizScore) => (

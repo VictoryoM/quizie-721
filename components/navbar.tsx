@@ -14,13 +14,6 @@ import {
   useBreakpointValue,
   useDisclosure,
   useColorMode,
-  Avatar,
-  Center,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
 } from '@chakra-ui/react';
 import {
   HamburgerIcon,
@@ -102,7 +95,15 @@ export default function Navbar() {
         </Stack>
       </Flex>
 
-      <Collapse in={isOpen} animateOpacity>
+      <Collapse
+        in={isOpen}
+        animateOpacity
+        onClick={() => {
+          setTimeout(() => {
+            onToggle();
+          }, 500);
+        }}
+      >
         <MobileNav />
       </Collapse>
     </Box>

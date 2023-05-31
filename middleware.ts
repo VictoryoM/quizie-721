@@ -1,5 +1,14 @@
 export { default } from 'next-auth/middleware';
 
 export const config = {
-  matcher: ['/quiz', '/api/quizScore', '/api/openAIQuestion', '/dashboard'],
+  matcher: [
+    '/quiz',
+    '/dashboard',
+    '/api/quizScore',
+    '/api/openAIQuestion',
+    '/api/delete/delUser',
+    '/api/delete/banTopic',
+    '/api/delete/eraseData',
+    '/api/edit/questionEdit',
+  ],
 };

@@ -44,9 +44,9 @@ const Settings = () => {
     if (response.status < 300) {
       onCloseDelete();
       setIsDisabled(false);
-      signOut();
+      await signOut();
+      router.push('/');
     }
-    router.push('/');
     setError('Something went wrong');
     setIsDisabled(false);
   };

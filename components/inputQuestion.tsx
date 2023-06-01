@@ -85,6 +85,7 @@ export default function InputQuestion() {
                     placeholder='Topic'
                     value={value}
                     onChange={handleInput}
+                    w='20vw'
                   />
                 </InputGroup>
                 <Center>

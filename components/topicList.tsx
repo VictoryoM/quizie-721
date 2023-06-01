@@ -1,6 +1,13 @@
 import { Box, Button, Center, Heading, Tooltip } from '@chakra-ui/react';
 import { Topic } from '@prisma/client';
 import Link from 'next/link';
+import { AES } from 'crypto-js';
+
+interface Pass {
+  titleTopic: string;
+  level: string;
+  id: number;
+}
 
 export default function TopicLists(props: any) {
   const { topics } = props;
@@ -13,6 +20,13 @@ export default function TopicLists(props: any) {
         </Center>
       </Box>
     );
+  const encryptQueryParams = (params: Pass) => {
+    const encryptedParams = AES.encrypt(
+      JSON.stringify(params),
+      process.env.QUIZ_SECRET!
+    ).toString();
+    return encryptedParams;
+  };
 
   return (
     <Box
@@ -22,35 +36,42 @@ export default function TopicLists(props: any) {
       flexWrap='wrap'
       mb={10}
     >
-      {topics.map((topic: Topic, index: number) => (
-        <Tooltip
-          key={topic.id}
-          label={topic.level}
-          aria-label={topic.titleTopic}
-        >
-          <Link
-            href={{
-              pathname: '/quiz',
-              query: {
-                titleTopic: `${topic.titleTopic}`,
-                level: `${topic.level}`,
-                id: topic.id,
-              },
-            }}
+      {topics.map((topic: Topic, index: number) => {
+        const queryParams = {
+          titleTopic: topic.titleTopic,
+          level: topic.level,
+          id: topic.id,
+        };
+
+        const encryptedQueryParams = encryptQueryParams(queryParams);
+
+        return (
+          <Tooltip
+            key={topic.id}
+            label={topic.level}
+            aria-label={topic.titleTopic}
           >
-            <Button
-              colorScheme={
-                ['red', 'blue', 'green', 'purple', 'pink'][index % 5]
-              }
-              variant='outline'
-              my={[1, 2]}
-              mx={[1, 2]}
+            <Link
+              href={{
+                pathname: '/quiz',
+                query: { data: encryptedQueryParams },
+              }}
+              suppressHydrationWarning
             >
-              {topic.titleTopic}
-            </Button>
-          </Link>
-        </Tooltip>
-      ))}
+              <Button
+                colorScheme={
+                  ['red', 'blue', 'green', 'purple', 'pink'][index % 5]
+                }
+                variant='outline'
+                my={[1, 2]}
+                mx={[1, 2]}
+              >
+                {topic.titleTopic}
+              </Button>
+            </Link>
+          </Tooltip>
+        );
+      })}
     </Box>
   );
 }

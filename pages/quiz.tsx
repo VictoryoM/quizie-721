@@ -31,6 +31,7 @@ import {
 import { useState } from 'react';
 import { GiTrophyCup } from 'react-icons/gi';
 import { useRouter } from 'next/router';
+import { enc, AES } from 'crypto-js';
 
 interface Scores {
   correctNum: number;
@@ -57,13 +58,10 @@ export default function Quiz({
     onOpen: scoreModalOpen,
     onClose: scoreModalClose,
   } = useDisclosure();
-  // const [correctScore, setCorrectScore] = useState<number>(0);
-  // const [avgScore, setAvgScore] = useState<number>(0);
-  // const [percentScore, setPercentScore] = useState<string>('');
   const [scores, setScores] = useState<Scores>(); // TopicResult
   const handleModalClose = () => {
     scoreModalClose();
-    router.push('/');
+    router.push('/scoreboard');
   };
 
   const handlePrev = () => {
@@ -74,7 +72,6 @@ export default function Quiz({
     setActiveTab(Math.min(activeTab + 1, questions.length - 1));
   };
 
-  console.log(answers);
   const {
     isOpen: isVisible,
     onClose,
@@ -107,7 +104,6 @@ export default function Quiz({
 
   const submitHandler = async () => {
     setIsDisabled(true);
-    // console.log(answers);
     const response = await fetch('/api/quizScore', {
       method: 'POST',
       headers: {
@@ -131,9 +127,9 @@ export default function Quiz({
     } else if (response.status < 300) {
       //open the scoreModal
       scoreModalOpen();
+      setAnswers([]);
     }
 
-    // setAnswers([]);
     setIsDisabled(false);
   };
 
@@ -262,10 +258,25 @@ export default function Quiz({
   );
 }
 
-export async function getServerSideProps(titleTopic: any) {
-  const topic = titleTopic.query.titleTopic;
-  const level = titleTopic.query.level;
-  const id = titleTopic.query.id;
+export async function getServerSideProps(context: any) {
+  const encryptedParams = context.query.data;
+
+  const decryptedParams = AES.decrypt(
+    encryptedParams,
+    process.env.QUIZ_APP_SECRET!
+  ).toString(enc.Utf8);
+
+  if (!decryptedParams) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const { titleTopic: topic, level, id } = JSON.parse(decryptedParams);
+
+  // const topic = titleTopic.query.titleTopic;
+  // const level = titleTopic.query.level;
+  // const id = titleTopic.query.id;
   if (!topic || !level) {
     return {
       notFound: true,

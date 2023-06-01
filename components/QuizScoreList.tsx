@@ -13,8 +13,6 @@ import {
   chakra,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { TopicResult } from '@prisma/client';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 

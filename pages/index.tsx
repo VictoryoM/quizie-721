@@ -15,7 +15,6 @@ import {
 import TrendingTopics from '@/components/dashboard/TrendingTopics';
 import { GetServerSidePropsContext } from 'next';
 import { Topic } from '@prisma/client';
-import { color } from 'framer-motion';
 
 interface Props {
   topics: Topic[];

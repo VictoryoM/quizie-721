@@ -76,7 +76,8 @@ export default function InputQuestion() {
           <ModalBody>
             <Center my={'10'}>
               <Stack w='40%' spacing={4}>
-                <InputGroup>
+                <InputGroup
+                minW='300px'>
                   <InputLeftElement pointerEvents='none'>
                     <QuestionIcon color='red.300' />
                   </InputLeftElement>
@@ -85,6 +86,7 @@ export default function InputQuestion() {
                     placeholder='Topic'
                     value={value}
                     onChange={handleInput}
+                    w='200px'
                   />
                 </InputGroup>
                 <Center>

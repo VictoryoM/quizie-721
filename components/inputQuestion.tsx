@@ -49,7 +49,7 @@ export default function InputQuestion() {
       body: JSON.stringify({ messages: questionAsked }),
     });
     if (response.status < 300) {
-      router.replace(router.asPath);
+      router.push('/dashboard');
     }
     setValue('');
     setLevel('Easy');
@@ -76,8 +76,7 @@ export default function InputQuestion() {
           <ModalBody>
             <Center my={'10'}>
               <Stack w='40%' spacing={4}>
-                <InputGroup
-                minW='300px'>
+                <InputGroup minW='300px'>
                   <InputLeftElement pointerEvents='none'>
                     <QuestionIcon color='red.300' />
                   </InputLeftElement>

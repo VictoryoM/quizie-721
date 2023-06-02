@@ -172,7 +172,19 @@ export default async function handler(
       }
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'An error occurred.' });
+    // console.log(error);
+    // res.status(500).json({ error: 'An error occurred.' });
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors, including timeouts
+      if (error.code === 'ECONNABORTED') {
+        res.status(504).json({ message: 'Request to OpenAI API timed out' });
+      } else {
+        res.status(500).json({ message: 'Error connecting to OpenAI API' });
+      }
+    } else {
+      // Handle other errors
+      console.log(error);
+      res.status(500).json({ message: 'An error occurred' });
+    }
   }
 }

@@ -75,7 +75,7 @@ export default function InputQuestion() {
           <ModalCloseButton />
           <ModalBody>
             <Center my={'10'}>
-              <Stack w='40%' spacing={4}>
+              <Stack spacing={4}>
                 <InputGroup minW='300px'>
                   <InputLeftElement pointerEvents='none'>
                     <QuestionIcon color='red.300' />
@@ -85,7 +85,6 @@ export default function InputQuestion() {
                     placeholder='Topic'
                     value={value}
                     onChange={handleInput}
-                    w='200px'
                   />
                 </InputGroup>
                 <Center>

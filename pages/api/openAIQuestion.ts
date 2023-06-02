@@ -122,6 +122,15 @@ export default async function handler(
           model: 'gpt-3.5-turbo',
           messages: openAiData,
         });
+
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => {
+            reject(new Error('Request to OpenAI API timed out'));
+          }, 60000); // Adjust the timeout value as needed
+        });
+
+        await Promise.race([question, timeoutPromise]);
+
         res.status(200).json('Success Create Topic');
         // res.status(200).json({ result: question.data });
         const replies = question.data.choices[0].message?.content;

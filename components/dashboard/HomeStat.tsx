@@ -130,7 +130,10 @@ export default function HomeStatistics(props: Stats) {
               columns={{ base: 1, md: 3 }}
               spacing={{ base: 5, lg: 8 }}
             >
-              <StatsCard title={'Overall score'} stat={scoreUser.toString()} />
+              <StatsCard
+                title={'Overall Answers'}
+                stat={`${scoreUser}/${topicsAttemptUser * 10}`}
+              />
               <StatsCard
                 title={'Attempted quizzes'}
                 stat={topicsAttemptUser.toString()}
@@ -155,7 +158,10 @@ export default function HomeStatistics(props: Stats) {
               columns={{ base: 1, md: 3 }}
               spacing={{ base: 5, lg: 8 }}
             >
-              <StatsCard title={'Overall score'} stat={scoreUser.toString()} />
+              <StatsCard
+                title={'Overall Answers'}
+                stat={`${scoreUser}/${topicsAttemptUser * 10}`}
+              />
               <StatsCard
                 title={'Attempted quizzes'}
                 stat={topicsAttemptUser.toString()}

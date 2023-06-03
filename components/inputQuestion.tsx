@@ -49,7 +49,7 @@ export default function InputQuestion() {
       body: JSON.stringify({ messages: questionAsked }),
     });
     if (response.status < 300) {
-      router.push('/dashboard');
+      router.push('/dashboard#remove-topics');
     }
     setValue('');
     setLevel('Easy');

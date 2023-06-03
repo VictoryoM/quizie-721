@@ -99,9 +99,7 @@ export default function Navbar() {
         in={isOpen}
         animateOpacity
         onClick={() => {
-          setTimeout(() => {
-            onToggle();
-          }, 500);
+          onToggle();
         }}
       >
         <MobileNav />

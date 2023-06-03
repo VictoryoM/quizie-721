@@ -57,7 +57,6 @@ export default async function handler(
       successMessage = 'Success Delete Topic';
     } else if (record === 'question') {
       const quests = request.ques;
-      const numberOfQuestions = quests?.length;
       const deletedQuestions = await prisma.question.deleteMany({
         where: {
           id: {
@@ -65,6 +64,8 @@ export default async function handler(
           },
         },
       });
+      const numberOfQuestions = deletedQuestions.count;
+
       const topicNumber = quests?.[0].topicId;
       const findTopic = await prisma.topic.findUnique({
         where: {
@@ -73,30 +74,41 @@ export default async function handler(
         select: {
           titleTopic: true,
           level: true,
+          questions: true,
         },
       });
 
-      const numQuestion =
-        numberOfQuestions === 1
-          ? `1(one) trivia question`
-          : `${numberOfQuestions} trivia questions`;
-      const openAiData: ChatCompletionRequestMessage[] = [
-        {
-          role: 'user',
-          content: `Please generate a set of ${numQuestion} on the topic "${findTopic?.titleTopic}" with "${findTopic?.level}" levels of difficulty. Each question should have one correct answer and three incorrect answers, and all options should be randomly shuffled. Format the output as a JSON array with the following structure: [{ "question": "What is the capital of France?", "correct_answer": "Paris", "options": [ "Tokyo", "London", "Paris", "New York" ] }]. Please ensure that the correct answer is included in the list of options, that each question is unique, and that the set of questions covers a variety of subtopics related to "${findTopic?.titleTopic}".`,
-        },
-      ];
-      const question = await openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',
-        messages: openAiData,
-      });
-      const questions = question.data.choices[0].message?.content || '';
+      if (findTopic?.questions.length! >= 10) {
+        successMessage = 'Success Delete Questions';
+      } else {
+        const numQuestion =
+          numberOfQuestions === 1
+            ? `1(one) trivia question`
+            : `${numberOfQuestions} trivia questions`;
+        const openAiData: ChatCompletionRequestMessage[] = [
+          {
+            role: 'user',
+            content: `Please generate a set of ${numQuestion} on the topic "${findTopic?.titleTopic}" with "${findTopic?.level}" levels of difficulty. Each question should have one correct answer and three incorrect answers, and all options should be randomly shuffled. Format the output as a JSON array with the following structure: [{ "question": "Which currency is used in Japan?", "correct_answer": "Japanese yen", "options": ["Pound sterling", "Euro", "Japanese yen", "Australian dollar"] }]. Please ensure that the correct answer is included in the list of options, that each question is unique, and that the set of questions covers a variety of subtopics related to "${findTopic?.titleTopic}".`,
+          },
+        ];
+        const question = await openai.createChatCompletion({
+          model: 'gpt-3.5-turbo',
+          messages: openAiData,
+        });
+        const questions = question.data.choices[0].message?.content || '';
+        const parsedQuestions = JSON.parse(questions);
 
-      if (questions) {
-        await addQuestion(JSON.parse(questions), topicNumber!);
+        if (parsedQuestions.length != numberOfQuestions) {
+          await addQuestion(
+            parsedQuestions.slice(0, numberOfQuestions),
+            topicNumber!
+          );
+        } else {
+          await addQuestion(parsedQuestions, topicNumber!);
+        }
+
+        successMessage = 'Success Delete Questions';
       }
-
-      successMessage = 'Success Delete Questions';
     } else {
       //error 400
       return res.status(400).json({ message: 'Bad Request' });

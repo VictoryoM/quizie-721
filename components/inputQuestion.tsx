@@ -5,22 +5,18 @@ import {
   InputLeftElement,
   Input,
   Center,
-  Spacer,
   Button,
   Box,
   Radio,
   RadioGroup,
-  Flex,
   useDisclosure,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
 

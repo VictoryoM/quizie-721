@@ -71,75 +71,76 @@ export default async function handler(
       });
       if (bannedTopic) {
         res.status(400).json({ message: 'Topic is banned' });
-      }
-      createQuiz = await prisma.topic.create({
-        data: {
-          titleTopic: topic,
-          level: level,
-          quizMasterId: prismaUser!.id,
-        },
-      });
-      const roleCheck = await prisma.role.findFirst({
-        where: {
-          users: {
-            some: {
-              email: prismaUser?.email,
-            },
-          },
-        },
-      });
-      if (!roleCheck) {
-        const assignRole = await prisma.role.update({
-          where: {
-            name: 'QuizAdmin',
-          },
+      } else {
+        createQuiz = await prisma.topic.create({
           data: {
+            titleTopic: topic,
+            level: level,
+            quizMasterId: prismaUser!.id,
+          },
+        });
+        const roleCheck = await prisma.role.findFirst({
+          where: {
             users: {
-              connect: {
-                id: prismaUser!.id,
+              some: {
+                email: prismaUser?.email,
               },
             },
           },
         });
-      }
-      const findQuestions = await prisma.question.findMany({
-        where: {
-          topicId: createQuiz.id,
-        },
-      });
-      if (findQuestions.length < 10 || findQuestions.length === 0) {
-        const numQuestion =
-          findQuestions.length === 9
-            ? `1(one) trivia question`
-            : `${10 - findQuestions.length} trivia questions`;
-        const openAiData: ChatCompletionRequestMessage[] = [
-          {
-            role: 'user',
-            content: `Please generate a set of ${numQuestion} on the topic "${topic}" with "${level}" levels of difficulty. Each question should have one correct answer and three incorrect answers, and all options should be randomly shuffled. Format the output as a JSON array with the following structure: [{ "question": "What is the capital of France?", "correct_answer": "Paris", "options": [ "Tokyo", "London", "Paris", "New York" ] }]. Please ensure that the correct answer is included in the list of options, that each question is unique, and that the set of questions covers a variety of subtopics related to "${topic}".`,
+        if (!roleCheck) {
+          const assignRole = await prisma.role.update({
+            where: {
+              name: 'QuizAdmin',
+            },
+            data: {
+              users: {
+                connect: {
+                  id: prismaUser!.id,
+                },
+              },
+            },
+          });
+        }
+        const findQuestions = await prisma.question.findMany({
+          where: {
+            topicId: createQuiz.id,
           },
-        ];
-        const question = await openai.createChatCompletion({
-          model: 'gpt-3.5-turbo',
-          messages: openAiData,
         });
+        if (findQuestions.length < 10 || findQuestions.length === 0) {
+          const numQuestion =
+            findQuestions.length === 9
+              ? `1(one) trivia question`
+              : `${10 - findQuestions.length} trivia questions`;
+          const openAiData: ChatCompletionRequestMessage[] = [
+            {
+              role: 'user',
+              content: `Please generate a set of ${numQuestion} on the topic "${topic}" with "${level}" levels of difficulty. Each question should have one correct answer and three incorrect answers, and all options should be randomly shuffled. Format the output as a JSON array with the following structure: [{ "question": "What is the capital of France?", "correct_answer": "Paris", "options": [ "Tokyo", "London", "Paris", "New York" ] }]. Please ensure that the correct answer is included in the list of options, that each question is unique, and that the set of questions covers a variety of subtopics related to "${topic}".`,
+            },
+          ];
+          const question = await openai.createChatCompletion({
+            model: 'gpt-3.5-turbo',
+            messages: openAiData,
+          });
 
-        const timeoutPromise = new Promise((_, reject) => {
-          setTimeout(() => {
-            reject(new Error('Request to OpenAI API timed out'));
-          }, 60000); // Adjust the timeout value as needed
-        });
+          const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => {
+              reject(new Error('Request to OpenAI API timed out'));
+            }, 60000); // Adjust the timeout value as needed
+          });
 
-        await Promise.race([question, timeoutPromise]);
+          await Promise.race([question, timeoutPromise]);
 
-        res.status(200).json('Success Create Topic');
-        // res.status(200).json({ result: question.data });
-        const replies = question.data.choices[0].message?.content;
-        let questions: Question[] = [];
+          res.status(200).json('Success Create Topic');
+          // res.status(200).json({ result: question.data });
+          const replies = question.data.choices[0].message?.content;
+          let questions: Question[] = [];
 
-        const topicId = createQuiz.id;
-        if (replies !== '') {
-          questions = JSON.parse(replies ?? '');
-          addQuestion(questions, topicId);
+          const topicId = createQuiz.id;
+          if (replies !== '') {
+            questions = JSON.parse(replies ?? '');
+            addQuestion(questions, topicId);
+          }
         }
       }
     } else if (createQuiz) {

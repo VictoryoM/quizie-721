@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/db/clients';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import NextAuth, { type NextAuthOptions } from 'next-auth';
-import LinkedInProvider from 'next-auth/providers/linkedin';
 import DiscordProvider from 'next-auth/providers/discord';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
@@ -38,10 +37,6 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID!,
       clientSecret: process.env.DISCORD_CLIENT_SECRET!,
-    }),
-    LinkedInProvider({
-      clientId: process.env.LINKEDIN_CLIENT_ID!,
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
     }),
   ],
 };
